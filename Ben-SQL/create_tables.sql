@@ -21,7 +21,7 @@ CREATE TABLE Customer (
 CREATE TABLE Item (
   article_ID INT,
   item_type VARCHAR(30) NOT NULL,
-  price DECIMAL(4,2) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
   seller_id INT NOT NULL,
   UNIQUE(article_ID), -- Just as a check in case
   FOREIGN KEY (seller_id) REFERENCES Customer(customer_id),
@@ -53,13 +53,13 @@ CREATE TABLE Inventory(
   item_name VARCHAR(30) NOT NULL,
   quant INT NOT NULL,
   seller_ID INT NOT NULL,
-  price DECIMAL (4,2) NOT NULL,
+  price DECIMAL (10,2) NOT NULL,
   FOREIGN KEY (item_ID, price) REFERENCES Item(article_ID, price),
   FOREIGN KEY (seller_ID) REFERENCES Customer(customer_ID),
   CHECK(item_ID > 0),
   CHECK(quant >=0),
   CHECK(seller_ID <> item_ID), -- Weird case, but still...
-  CHECK(Price >0.00),
+  CHECK(price >0.00),
   PRIMARY KEY(item_ID, seller_ID) -- Hypothetically, a seller will have a consistent price for an item that they sell, right?
 );
 
@@ -121,10 +121,10 @@ CREATE TABLE PaysWith(
 
 -- --------------------------------------------Shopping Cart
 CREATE TABLE ShoppingCart(
-  final_price DECIMAL(9,2) NOT NULL,
+  final_price DECIMAL(10,2) NOT NULL,
   Items_Bought INT, -- Total number of items bought, also could just be a count of the number of rows in ShoppingCart
   quant_per_item INT, -- Number of items per item --> SELECT COUNT(*) from ShoppingCart S GROUP BY S.item_ID
-  price_per_item DECIMAL(4,2) NOT NULL,
+  price_per_item DECIMAL(10,2) NOT NULL,
   item_ID INT NOT NULL, -- Perform a join with this and item and get the price of the item or maybe the Inventory 
   FOREIGN KEY (item_ID,price_per_item) references Item(article_id, price),
   CHECK (quantity >0),
