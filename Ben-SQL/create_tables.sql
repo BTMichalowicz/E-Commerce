@@ -223,14 +223,27 @@ CREATE TABLE Oversee(
 	empl_ID INT NOT NULL,
     item_ID INT NOT NULL,
     Seller_ID INT NOT NULL,
+    supervisor_ID INT NOT NULL,
     CHECK (SellerID <> empl_ID), -- Weird case, but just to make sure
     CHECK (empl_ID >0),
     CHECK (Seller_ID >0),
-    FOREIGN KEY (empl_ID) REFERENCES employee(epl_ID),
+    FOREIGN KEY (empl_ID, supervisor_ID) REFERENCES employee(epl_ID, supervisor_ID),
     FOREIGN KEY (item_ID, Seller_ID) REFERENCES Inventory(item_ID, seller_ID),
     PRIMARY KEY(empl_ID)
 );
+
+
+CREATE TABLE aids (
+	empl_ID INT NOT NULL,
+    customer_ID INT NOT NULL,
+    supervisor_ID INT NOT NULL,
+    FOREIGN KEY (empl_ID, supervisor_ID) REFERENCES employee(epl_ID, supervisor_ID),
+    FOREIGN KEY (customer_ID) REFERENCES Customer(customer_ID),
+    PRIMARY KEY (empl_ID, customer_ID)
+);
     
+    
+	
 
     
 
