@@ -11,6 +11,7 @@ CREATE TABLE Customer (
   last_name VARCHAR(25) NOT NULL,
   email_id VARCHAR(50) NOT NULL,
   phone_number DECIMAL (10, 0) NOT NULL,
+  address VARCHAR(100) NOT NULL,
   UNIQUE (customer_id, phone_number, email_id),
   -- CHECK(phone_numer <= 99999999999 && phone_number >= 1000000000),
   PRIMARY KEY (customer_id) -- Assuming Phone numbers are a set valued realm
@@ -100,6 +101,7 @@ CREATE TABLE Writes(
 -- ----------------------------------------Payment Table
 CREATE TABLE Payment(
   credit_card BIGINT NOT NULL,
+  UNIQUE(credit_card),
   expiration_date DATE NOT NULL,
   payment_type VARCHAR (20) NOT NULL, -- What is meant by this again? Set valued? Eh, I guess so
   CHECK (credit_card > 0),
@@ -115,6 +117,7 @@ CREATE TABLE PaysWith(
   payment_type VARCHAR(20) NOT NULL,
   customer_ID INT NOT NULL,
   -- FOREIGN KEY item_ID REFERENCES Item,
+  UNIQUE(credit_card),
   FOREIGN KEY (credit_card, payment_type) REFERENCES Payment(credit_card, payment_type),
   PRIMARY KEY (item_ID, credit_card, customer_ID)
 );
