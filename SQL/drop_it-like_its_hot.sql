@@ -1,1 +1,1 @@
-DROP DATABASE IF EXISTS e_commerce
+DROP DATABASE IF EXISTS e_commerce ;

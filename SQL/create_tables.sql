@@ -1,7 +1,8 @@
 -- DROP DATABASE e_commerce ;
 -- Benjamin Michalowicz, Veronica Quintana, Ian Peitzsch
 -- CSE 305 HW2 under Dr. Praveen Tripathi
-
+CREATE DATABASE e_commerce ;
+USE  e_commerce;
 
 -- - ----- ------------------------- Customer
 CREATE TABLE Customer (
