@@ -219,4 +219,20 @@ CREATE TABLE employee(
 );
 
 
+CREATE TABLE Oversee(
+	empl_ID INT NOT NULL,
+    item_ID INT NOT NULL,
+    Seller_ID INT NOT NULL,
+    CHECK (SellerID <> empl_ID), -- Weird case, but just to make sure
+    CHECK (empl_ID >0),
+    CHECK (Seller_ID >0),
+    FOREIGN KEY (empl_ID) REFERENCES employee(epl_ID),
+    FOREIGN KEY (item_ID, Seller_ID) REFERENCES Inventory(item_ID, seller_ID),
+    PRIMARY KEY(empl_ID)
+);
+    
+
+    
+
+
     
