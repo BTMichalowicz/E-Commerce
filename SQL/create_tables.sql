@@ -10,9 +10,9 @@ CREATE TABLE Customer (
   first_name VARCHAR(20) NOT NULL,
   last_name VARCHAR(25) NOT NULL,
   email_id VARCHAR(50) NOT NULL,
-  phone_number INT NOT NULL,
+  phone_number DECIMAL (10, 0) NOT NULL,
   UNIQUE (customer_id, phone_number, email_id),
-  CHECK(phone_numer <= 9999999999 && phone_number >= 10000000000),
+  -- CHECK(phone_numer <= 99999999999 && phone_number >= 1000000000),
   PRIMARY KEY (customer_id) -- Assuming Phone numbers are a set valued realm
 );
 
@@ -184,10 +184,39 @@ CREATE TABLE Shipsby(
 -- -------------------------------------------- 
 -- - ------------------------------------------ Employee, Admin, Database-Admin, etc... How would I approach this??
 
-CREATE TABLE EMPLOYEE(
+CREATE TABLE worker(
 	epl_ID INT NOT NULL,
     Designation VARCHAR(45) NOT NULL,
-    supervisor_ID int NOT NULL,
-    CHECK (supervisor_ID <> epl_ID),
+	date_joined DATE NOT NULL,
     PRIMARY KEY (epl_ID)
 );
+
+CREATE TABLE administrator(
+    epl_ID INT NOT NULL,
+    Designation VARCHAR(45) NOT NULL,
+	date_joined DATE NOT NULL,
+    FOREIGN KEY (epl_ID) REFERENCES worker(epl_ID),
+    PRIMARY KEY (epl_ID)
+);
+
+CREATE TABLE db_admin(
+    epl_ID INT NOT NULL,
+    Designation VARCHAR(45) NOT NULL,
+	date_joined DATE NOT NULL,
+    FOREIGN KEY (epl_ID) REFERENCES worker(epl_ID),
+    PRIMARY KEY (epl_ID)
+);
+
+CREATE TABLE employee(
+	epl_ID INT NOT NULL,
+    designation VARCHAR(45) NOT NULL,
+    date_joined DATE NOT NULL,
+    supervisor_ID INT NOT NULL,
+    CHECK(epl_ID <> supervisor_ID),
+    FOREIGN KEY (epl_ID) references worker(epl_ID),
+    FOREIGN KEY (supervisor_ID) REFERENCES worker(epl_ID),
+    PRIMARY KEY(epl_ID, supervisor_ID)
+);
+
+
+    
