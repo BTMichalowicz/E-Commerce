@@ -233,7 +233,7 @@ CREATE TABLE Oversee(
     Seller_ID INT NOT NULL,
     supervisor_ID INT NOT NULL,
     CHECK (Seller_ID <> empl_ID), -- Weird case, but just to make sure
-     CHECK (Seller_ID <> supervisor_ID),
+	CHECK (Seller_ID <> supervisor_ID),
     CHECK (empl_ID <> supervisor_ID),
     CHECK (empl_ID >0),
     CHECK (Seller_ID >0),
@@ -246,6 +246,7 @@ CREATE TABLE Oversee(
 CREATE TABLE aids (
 	empl_ID INT NOT NULL,
     customer_ID INT NOT NULL,
+    UNIQUE(customer_ID),
     supervisor_ID INT NOT NULL,
     CHECK (empl_ID <> customer_ID),
     CHECK (empl_ID <> supervisor_ID),
