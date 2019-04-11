@@ -36,5 +36,66 @@ INSERT INTO PaysWith VALUES(1, 123456789019, "Venmo",1);
 INSERT INTO PaysWith VALUES(1, 123456789018, "Paypal",2);
 INSERT INTO PaysWith VALUES(1, 123456789017, "Drummer",3);
 
+INSERT INTO ShoppingCart VALUES(80650.40, 10, 4, 4.45, 1);
+INSERT INTO ShoppingCart VALUES(80650.40, 10, 2, 23.12, 2);
+INSERT INTO ShoppingCart VALUES(80650.40, 10, 2, 400.00, 3);
+INSERT INTO ShoppingCart VALUES(80650.40, 10, 2, 40000.90, 34);
+
+INSERT INTO Container VALUES (1, 2343, 4.45);
+INSERT INTO Container VALUES (2, 2343, 23.12);
+INSERT INTO Container VALUES (3, 2343, 400.00);
+INSERT INTO Container VALUES (34, 2343, 40000.90); 
+
+INSERT INTO StoredIn VALUES (1, 1, 234, 4.45);
+INSERT INTO StoredIn VALUES (1, 2, 234, 4.45);
+INSERT INTO StoredIn VALUES (1, 3, 234, 4.45);
+INSERT INTO StoredIn VALUES (2, 3, 234, 23.12);
+INSERT INTO StoredIn VALUES (3, 3, 234, 400.00);
+INSERT INTO StoredIn VALUES (34, 3, 234, 40000.90);
+
+INSERT INTO Shipment_Delivery VALUES ("102 Spring Valley", 4.95, "FedEX", "Handle with Care");
+INSERT INTO Shipment_Delivery VALUES ("103 Spring Valley", 9.99, "USPS", "Handle with Care");
+INSERT INTO Shipment_Delivery VALUES ("104 Spring Valley", 13.96, "SIMT", "Handle with Care");
 
 
+INSERT INTO Shipsby VALUES(1, 4.45, 10, 4);
+INSERT INTO Shipsby VALUES(2, 23.12, 10, 2);
+INSERT INTO Shipsby VALUES(3, 400.0, 10, 2);
+INSERT INTO Shipsby VALUES(34, 40000.90, 10, 2);
+
+
+INSERT INTO worker VALUES (1, "Init_Method", '1990-01-01');
+INSERT INTO worker VALUES (2, "Package Manager", '1992-01-01');
+INSERT INTO worker VALUES (3, "Board_breaker", '1993-01-01');
+INSERT INTO worker VALUES (4, "Carman of the bored", '1994-01-01');
+INSERT INTO worker VALUES (5, "Init_Method", '1990-01-01');
+INSERT INTO worker VALUES (6, "Package Manager", '1992-01-01');
+INSERT INTO worker VALUES (7, "Board_breaker", '1993-01-01');
+INSERT INTO worker VALUES (8, "Carman of the bored", '1994-01-01');
+
+INSERT INTO administrator VALUES (1, "Init_Method", '1990-01-01');
+INSERT INTO administrator VALUES (2, "Package Manager", '1992-01-01');
+INSERT INTO administrator VALUES (3, "Board_breaker", '1993-01-01');
+INSERT INTO administrator VALUES (4, "Carman of the bored", '1994-01-01');
+
+INSERT INTO db_admin VALUES (1, "Init_Method", '1990-01-01');
+INSERT INTO db_admin VALUES (2, "Package Manager", '1992-01-01');
+INSERT INTO db_admin VALUES (3, "Board_breaker", '1993-01-01');
+INSERT INTO db_admin VALUES (4, "Carman of the bored", '1994-01-01');
+
+
+INSERT INTO employee VALUES (1, "Init_Method", '1990-01-01', 5);
+INSERT INTO employee VALUES (2, "Package Manager", '1992-01-01', 6);
+INSERT INTO employee VALUES (3, "Board_breaker", '1993-01-01', 7);
+INSERT INTO employee VALUES (4, "Carman of the bored", '1994-01-01', 8);
+
+
+INSERT INTO Oversee VALUES(1, 1, 1, 5);
+INSERT INTO Oversee VALUES(2, 2, 4, 6);
+INSERT INTO Oversee VALUES(3, 3, 2, 7);
+INSERT INTO Oversee VALUES(4, 34, 4, 8);
+
+INSERT into aids VALUES (1,2, 5);
+INSERT into aids VALUES (2,1, 6);
+INSERT into aids VALUES (3,4, 7);
+INSERT into aids VALUES (1,3, 5);

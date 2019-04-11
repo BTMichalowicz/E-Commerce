@@ -144,7 +144,7 @@ CREATE TABLE ShoppingCart(
 CREATE TABLE Container(
   item_ID INT NOT NULL,
   quantity INT NOT NULL,
-  price DECIMAL(4,2) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
   CHECK (quantity >=0),
   CHECK (item_ID >0),
   FOREIGN KEY (item_ID, price) REFERENCES Item(article_ID, price),
@@ -157,6 +157,8 @@ CREATE TABLE StoredIn(
   item_ID INT NOT NULL,
   seller_ID INT NOT NULL,
   quantity INT NOT NULL,
+  price DECIMAL (10, 2) NOT NULL,
+  FOREIGN KEY (item_ID, price) REFERENCES Item(article_id, price),
   CHECK (quantity >=0),
   CHECK (item_ID >0),
   CHECK (seller_ID>0),
@@ -179,7 +181,7 @@ CREATE TABLE Shipment_Delivery(
 
 CREATE TABLE Shipsby(
   item_ID INT NOT NULL,
-  item_PRICE DECIMAL(4,2) NOT NULL,
+  item_PRICE DECIMAL(10,2) NOT NULL,
   items_bought INT NOT NULL,
   quant_per_item INT NOT NULL,
   FOREIGN KEY (item_ID, item_PRICE, quant_per_item) REFERENCES ShoppingCart(item_ID, price_per_item, quant_per_item),
@@ -230,7 +232,9 @@ CREATE TABLE Oversee(
     item_ID INT NOT NULL,
     Seller_ID INT NOT NULL,
     supervisor_ID INT NOT NULL,
-    CHECK (SellerID <> empl_ID), -- Weird case, but just to make sure
+    CHECK (Seller_ID <> empl_ID), -- Weird case, but just to make sure
+     CHECK (Seller_ID <> supervisor_ID),
+    CHECK (empl_ID <> supervisor_ID),
     CHECK (empl_ID >0),
     CHECK (Seller_ID >0),
     FOREIGN KEY (empl_ID, supervisor_ID) REFERENCES employee(epl_ID, supervisor_ID),
@@ -243,6 +247,9 @@ CREATE TABLE aids (
 	empl_ID INT NOT NULL,
     customer_ID INT NOT NULL,
     supervisor_ID INT NOT NULL,
+    CHECK (empl_ID <> customer_ID),
+    CHECK (empl_ID <> supervisor_ID),
+    CHECK (customer_ID <> supervisor_ID),
     FOREIGN KEY (empl_ID, supervisor_ID) REFERENCES employee(epl_ID, supervisor_ID),
     FOREIGN KEY (customer_ID) REFERENCES Customer(customer_ID),
     PRIMARY KEY (empl_ID, customer_ID)
