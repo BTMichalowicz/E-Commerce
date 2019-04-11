@@ -1,8 +1,6 @@
--- DROP DATABASE e_commerce ;
--- Benjamin Michalowicz, Veronica Quintana, Ian Peitzsch
--- CSE 305 HW2 under Dr. Praveen Tripathi
+
 CREATE DATABASE e_commerce ;
-USE  e_commerce;
+ USE  e_commerce;
 
 -- - ----- ------------------------- Customer
 CREATE TABLE Customer (
@@ -72,13 +70,15 @@ CREATE TABLE Review(
   -- As if writing a review
   customer_ID INT NOT NULL,
   article_ID INT NOT NULL,
+  item_Price DECIMAL(10, 2) NOT NULL,
   seller_ID INT NOT NULL,
-  ratings INT, -- Perhaps a starting point???
+  num_stars INT, -- Perhaps a starting point???
+  CHECK (customer_ID <> seller_ID),
   review VARCHAR(500),
   CHECK (num_stars<=5 && num_stars >=1),
   FOREIGN KEY (customer_ID) REFERENCES Customer(customer_ID),
   FOREIGN KEY (seller_ID) REFERENCES Customer(customer_ID),
- -- FOREIGN KEY article_ID REFERENCES Item(article_ID),
+  FOREIGN KEY (article_ID, item_Price) REFERENCES Item(article_ID, price),
   PRIMARY KEY (customer_ID, article_ID, seller_ID)
 );
 
@@ -88,6 +88,8 @@ CREATE TABLE Writes(
   customer_ID INT NOT NULL,
   article_ID INT NOT NULL,
   seller_ID INT NOT NULL,
+  item_price DECIMAL(10,2) NOT NULL,
+  CHECK (item_price > 0.00),
   -- ratings INT NOT NULL,
   -- CHECK (ratings >=1 && ratings <=5),
   FOREIGN KEY (customer_ID) REFERENCES Customer(customer_ID),
