@@ -22,3 +22,19 @@ INSERT INTO Review VALUES (1, 1, 4.45, 3, 1, "This thing is dirt cheap and runs 
 INSERT INTO Review VALUES (2, 2, 23.12, 4, 2, "............");
 INSERT INTO Review VALUES (3, 3, 400.00, 1, 3, "I can bike now!! A bit expensive");
 INSERT INTO Review VALUES (4, 34, 40000.90, 2, 4, "It nyoom like no one's business");
+-- Between writes and reviews, the seller, the buyer, and the item HAVE to be the same thing in order to refer to who's writing what about what and about whom
+INSERT INTO Writes VALUES(1,1,3,4.45);
+INSERT INTO Writes VALUES(2,2,4,23.12);
+INSERT INTO Writes VALUES(3,3,1,400.00);
+INSERT INTO Writes VALUES(4,34,2,40000.90);
+
+INSERT INTO Payment VALUES (123456789019, '2023-11-24', "Venmo");
+INSERT INTO Payment VALUES (123456789018, '2022-11-24', "Paypal");
+INSERT INTO Payment VALUES (123456789017, '2021-11-24', "Drummer");
+
+INSERT INTO PaysWith VALUES(1, 123456789019, "Venmo",1);
+INSERT INTO PaysWith VALUES(1, 123456789018, "Paypal",2);
+INSERT INTO PaysWith VALUES(1, 123456789017, "Drummer",3);
+
+
+

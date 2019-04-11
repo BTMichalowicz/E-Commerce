@@ -118,6 +118,7 @@ CREATE TABLE PaysWith(
   credit_card BIGINT NOT NULL,
   payment_type VARCHAR(20) NOT NULL,
   customer_ID INT NOT NULL,
+  FOREIGN KEY (customer_ID) REFERENCES Customer(customer_id),
   -- FOREIGN KEY item_ID REFERENCES Item,
   UNIQUE(credit_card),
   FOREIGN KEY (credit_card, payment_type) REFERENCES Payment(credit_card, payment_type),
@@ -135,7 +136,7 @@ CREATE TABLE ShoppingCart(
   CHECK (quantity >0),
   CHECK(price_per_item >0),
    -- TODO: FINISH THIS 
-  PRIMARY KEY (item_ID, price_per_item, quant_per_item) -- I guess?!?!?
+  PRIMARY KEY (item_ID, price_per_item, quant_per_item, final_price) -- I guess?!?!?
 );
 
 -- ----------------------------------------------- Contains --> For item versus shopping cart
