@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS e_commerce;
 CREATE DATABASE e_commerce ;
  USE  e_commerce;
 
@@ -107,8 +107,10 @@ CREATE TABLE Payment(
   expiration_date DATE NOT NULL,
   payment_type VARCHAR (20) NOT NULL, -- What is meant by this again? Set valued? Eh, I guess so
   CHECK (credit_card > 0),
+  
   -- CHECK ( convert(VARCHAR(15), expiration_date, 102) > convert(VARCHAR(10), GETDATE(), 102)), -- Ensure that we have a valid card expiration date
-  PRIMARY KEY (credit_card, payment_type)
+  PRIMARY KEY (credit_card),
+  CHECK(payment_type in ('MasterCard,', 'Visa', 'American Express', 'Chase', 'Amazon', 'Venmo'))
 
 );
 
@@ -121,7 +123,7 @@ CREATE TABLE PaysWith(
   FOREIGN KEY (customer_ID) REFERENCES Customer(customer_id),
   -- FOREIGN KEY item_ID REFERENCES Item,
   UNIQUE(credit_card),
-  FOREIGN KEY (credit_card, payment_type) REFERENCES Payment(credit_card, payment_type),
+  FOREIGN KEY (credit_card) REFERENCES Payment(credit_card),
   PRIMARY KEY (item_ID, credit_card, customer_ID)
 );
 
