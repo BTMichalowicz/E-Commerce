@@ -10,7 +10,7 @@ insert into Item values (null, 15.05, 'Track Pants', 40, 'Adidas Track Pants Blu
 insert into Item values (null, 78.00, 'Shoes', 25, 'Nike Air Max', (select SellerId from seller where SellerName = 'Nike'));
 insert into Item values (null, 53.55, 'Shoes', 37, 'Nike Flex', (select SellerId from seller where SellerName = 'Nike'));
 insert into Item values (null, 98.55, 'Shoes', 40, 'Reebok Lifestyle Leather', (select SellerId from seller where SellerName = 'Reebok'));
-insert into Item values (null, 32.99, 'Shoe', 45, 'Reebok Club C Vintage', (select SellerId from seller where SellerName = 'Reebok'));
+insert into Item values (null, 32.99, 'Shoes', 45, 'Reebok Club C Vintage', (select SellerId from seller where SellerName = 'Reebok'));
 insert into Item values (null, 12.03, 'Sweatshirt', 48, 'Champion Sweatshirt Blue', (select SellerId from seller where SellerName = 'Champion'));
 insert into Item values (null, 14.03, 'Sweatshirt', 60, 'Champion Sweatshirt Grey', (select SellerId from seller where SellerName = 'Champion'));
 
