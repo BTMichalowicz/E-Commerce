@@ -32,8 +32,8 @@ insert into Shipment values (null, 2, 'ARRIVED');
 
 insert into Employee values (null, 'Supervisor', 'Praveen', 'Tripathi', STR_TO_DATE('1-01-2019', '%m-%d-%Y'), null);
 insert into Employee values (null, 'Programmer', 'Ian', 'Peitzsch', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
-insert into Employee values (null, 'Programmer', 'Ben', 'Benson', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
-insert into Employee values (null, 'Programmer', 'V', 'Vvvvvvvvvvvv', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
+insert into Employee values (null, 'Programmer', 'Beanjamin', 'MichaelJordanJackson', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
+insert into Employee values (null, 'Programmer', 'V', 'VVvvvvvvvvvv', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
 
 insert into Payment values (11111111111, 'MasterCard', STR_TO_DATE('1-08-2022', '%d-%m-%Y'));
 insert into Payment values (22222222222, 'Discover', STR_TO_DATE('1-02-2024', '%d-%m-%Y'));
