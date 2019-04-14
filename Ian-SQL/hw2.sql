@@ -61,22 +61,29 @@ create table Employee(
     primary key(EmployeeId),
     foreign key(SupervisorId) references Employee(EmployeeId),
     check(SupervisorId != EmployeeId) );
-
-create table Payment(
-    CreditCard bigint,
+create table CreditCard(
+	Num bigint,
+    Own int not null,
     PaymentType varchar(10) not null,
     ExpirationDtae date not null,
-    primary key(CreditCard),
+    Primary key(Num),
+    foreign key(Own) references Customer(CustomerId), 
     check(PaymentType in ('MasterCard', 'Visa', 'Discover', 'Chase')) );
+create table Payment(
+	PaymentId int auto_increment,
+    CreditCard bigint not null,
+	Amount decimal(10,2), 
+    primary key(PaymentId),
+    foreign key(CreditCard) references CreditCard(Num) );
 
 create table Buys(
 	CustomerId int,
     ItemId int,
     Quantity int not null,
     Price decimal(10,2),
-    PaymentId bigint,
+    PaymentId int,
     primary key(CustomerId, ItemId),
     foreign key(CustomerId) references Customer(CustomerId),
     foreign key(ItemId) references Item(ItemId),
-    foreign key(PaymentId) references Payment(CreditCard) );
+    foreign key(PaymentId) references Payment(PaymentId) );
     
