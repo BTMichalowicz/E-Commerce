@@ -61,6 +61,7 @@ create table Employee(
     primary key(EmployeeId),
     foreign key(SupervisorId) references Employee(EmployeeId),
     check(SupervisorId != EmployeeId) );
+
 create table CreditCard(
 	Num bigint,
     Own int not null,
@@ -69,6 +70,7 @@ create table CreditCard(
     Primary key(Num),
     foreign key(Own) references Customer(CustomerId), 
     check(PaymentType in ('MasterCard', 'Visa', 'Discover', 'Chase')) );
+
 create table Payment(
 	PaymentId int auto_increment,
     CreditCard bigint not null,
