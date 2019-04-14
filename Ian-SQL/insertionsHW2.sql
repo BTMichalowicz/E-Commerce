@@ -32,13 +32,19 @@ insert into Shipment values (null, 2, 'ARRIVED');
 
 insert into Employee values (null, 'Supervisor', 'Praveen', 'Tripathi', STR_TO_DATE('1-01-2019', '%m-%d-%Y'), null);
 insert into Employee values (null, 'Programmer', 'Ian', 'Peitzsch', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
-insert into Employee values (null, 'Programmer', 'Beanjamin', 'MichaelJordanJackson', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
-insert into Employee values (null, 'Programmer', 'V', 'VVvvvvvvvvvv', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
+insert into Employee values (null, 'Programmer', 'Ben', 'Benson', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
+insert into Employee values (null, 'Programmer', 'V', 'Vvvvvvvvvvvv', STR_TO_DATE('1-28-2019', '%m-%d-%Y'), 1);
 
-insert into Payment values (11111111111, 'MasterCard', STR_TO_DATE('1-08-2022', '%d-%m-%Y'));
-insert into Payment values (22222222222, 'Discover', STR_TO_DATE('1-02-2024', '%d-%m-%Y'));
+insert into CreditCard values (1111111111, 1, 'Discover', STR_TO_DATE('1-08-2224', '%m-%d-%Y'));
+insert into CreditCard values (2222222222, 2, 'Visa', STR_TO_DATE('1-02-2222', '%m-%d-%Y'));
+insert into CreditCard values (3333333333, 1, 'Chase', STR_TO_DATE('1-03-2220', '%m-%d-%Y'));
 
-insert into Buys values (1, 2, 1, 15.05, 11111111111);
-insert into Buys values (2, 3, 1, 78.00, 22222222222);
+insert into Payment values (null, 1111111111, 36.00);
+insert into Payment values (null, 2222222222, 78.00);
+
+
+insert into Buys values (1, 2, 1, 15.05, 1);
+insert into Buys values (1, 1, 1, 20.95, 1);
+insert into Buys values (2, 3, 1, 78.00, 2);
 insert into Buys values (4, 8, 3, 42.09, null);
 
