@@ -3,7 +3,7 @@ create Database myDB;
 use myDB;
 
 CREATE TABLE Seller(
-	SellerId INT AUTO_INCREMENT,
+    SellerId INT AUTO_INCREMENT,
     SellerName VARCHAR(64) DEFAULT "Anonymous",
     Primary Key(SellerId) );
 
