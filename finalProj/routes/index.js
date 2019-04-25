@@ -1,16 +1,18 @@
-module.exports = {
-    getHomePage: (req, res) => {
-        let query = "SELECT * FROM `players` ORDER BY id ASC"; // query database to get all the players
+var fs = require('fs');
+var ejs = require('ejs')
+var express = require('express');
+var router = express.Router()
+module.exports = function(app) {
+       // let query = "SELECT * FROM `players` ORDER BY id ASC"; // query database to get all the players
 
         // execute query
-        db.query(query, (err, result) => {
-            if (err) {
-                res.redirect('/');
-            }
-            res.render('index.ejs', {
-                title: "Welcome to Socka | View Players" ,
-                players: result
+      
+            app.get('/', function(req, res){
+               
+                res.render('index.ejs', {
+                title: "Database Designers Pro!!"});
+
+            
             });
-        });
-    },
-}
+        
+    };
