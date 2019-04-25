@@ -8,9 +8,9 @@ const app = express();
 //TODO: Have routing between pages a la tutorial
 
 
-const port = 5000; //localhost:5000
+const port = 8080; //localhost:5000
 
-//const {HomePage} = require('./routes/index'); //TODO: CREATE routes/index.js!!!
+const {getHomePage} = require('./routes/index'); //TODO: CREATE routes/index.js!!!
 //const {addItem,sellItem,addCustomer,addSeller,doTransaction} = require('./routes/ecommerce') TODO: DO THIS!!
 
 
@@ -66,16 +66,20 @@ global.db=db; //Global DB variable
 app.set('port', process.env.port || port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended : false}));
+app.engine('html', require('ejs').renderFile)
+app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 //app.use(fileUpload());
 
 
-//app.get('/', getHomePage);
+app.get('/', getHomePage);
 
 
-app.listen(port, () =>{
+app.listen(port, (err) =>{
+	if(err){
+		throw err;
+	}
 	console.log('Server running on port: ' + port);
 });
 
