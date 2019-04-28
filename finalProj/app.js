@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json);
 app.use(express.static(path.join(__dirname, '/public')));
 
-//db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
+db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
 db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
@@ -62,7 +62,6 @@ db.query('CREATE TABLE if not exists CreditCard(	Num bigint,    Own int not null
 
 db.query('CREATE TABLE if not exists Payment(	PaymentId int auto_increment,    CreditCard bigint not null,	Amount decimal(10,2),     primary key(PaymentId),    foreign key(CreditCard) references CreditCard(Num) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Payment Table")});
 
-
 db.query('CREATE TABLE if not exists Buys(	CustomerId int,    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) );', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
 
 
@@ -78,7 +77,7 @@ global.db=db; //Global DB variable
 //app.get('/', function(req, res){ console.log("Index!!"); res.render('index.ejs', {title: "Database Designers Pro!"})});
 
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
-app.listen(port, function(err){
+var server = app.listen(port, function(err){
 	if(err){
 		throw err;
 	}
