@@ -1,15 +1,14 @@
 const mysql=require('mysql');
 const express = require('express');
 const ejs = require('ejs');
-const path = require('path');
 const bodyParser = require('body-parser');
 var app = express();
 
 //TODO: Have routing between pages a la tutorial
 
 
-const port = 8080; //localhost:5000
-require('./routes/index')(app);
+ const{getHome, list_items}=require('./routes/index')
+const port = 8080; //localhost:5000require('./routes/index');
 //require('./routes/ecommerce');
 
 //const {getHomePage} = require('./routes/index'); //TODO: CREATE routes/index.js!!!
@@ -34,9 +33,9 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json);
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(__dirname+ '/public'));
 
-db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
+//db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
 db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
@@ -73,9 +72,10 @@ global.db=db; //Global DB variable
 
 //app.use(fileUpload());
 
+app.get('/', getHome);
+app.get('/list_items', list_items);
 
-//app.get('/', function(req, res){ console.log("Index!!"); res.render('index.ejs', {title: "Database Designers Pro!"})});
-
+console.log("Index????");
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
 var server = app.listen(port, function(err){
 	if(err){
@@ -86,4 +86,4 @@ var server = app.listen(port, function(err){
 
 //For testing purposes
 
-db.end();
+//db.end();
