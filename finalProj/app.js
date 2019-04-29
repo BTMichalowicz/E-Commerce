@@ -1,42 +1,39 @@
-const mysql=require('mysql');
 const express = require('express');
-const ejs = require('ejs');
+const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
-var app = express();
+const mysql = require('mysql');
+const path = require('path');
+const app = express();
 
-//TODO: Have routing between pages a la tutorial
-
-
- const{getHome, list_items}=require('./routes/index')
-const port = 8080; //localhost:5000require('./routes/index');
-//require('./routes/ecommerce');
-
-//const {getHomePage} = require('./routes/index'); //TODO: CREATE routes/index.js!!!
-//const {addItem,sellItem,addCustomer,addSeller,doTransaction} = require('./routes/ecommerce') TODO: DO THIS!!
+ const {getHome, getItem} = require('./routes/index');
 
 
-const db = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: 'DreamTheaterDrumset85!',
+const port = 5000;
 
+// create connection to database
+// the mysql.createConnection function takes in a configuration object which contains host, user, password and the database name.
+const db = mysql.createConnection ({
+    host: 'localhost',
+    user: 'root',
+    password: 'DreamTheaterDrumset85!',
+	  
 });
 
+// connect to database
 db.connect((err) => {
-	if(err){
-		throw err;
-	}
-	console.log('Welcome to Database Designers Pro!');
+    if (err) {
+        throw err;
+    }
+    console.log('Connected to database');
 });
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(bodyParser.json);
-app.use(express.static(__dirname+ '/public'));
+/*db.query('create database socka;', (err, rows) => {
+	if (err) throw err;
+
+});
+*/
 
 //db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
-db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
+//db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
 //db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
@@ -66,6 +63,13 @@ db.query('CREATE TABLE if not exists Buys(	CustomerId int,    ItemId int,    Qua
 
 
 global.db=db; //Global DB variable
+app.set('port', process.env.port || port); // set express to use this port
+app.set('views', __dirname + '/views'); // set express to look in this folder to render our view
+app.set('view engine', 'ejs'); // configure template engine
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // parse form data client
+app.use(express.static(path.join(__dirname, 'public'))); // configure express to use public folder
+app.use(fileUpload()); // configure fileupload
 
 
 //middleware
@@ -73,9 +77,10 @@ global.db=db; //Global DB variable
 //app.use(fileUpload());
 
 app.get('/', getHome);
-app.get('/list_items', list_items);
+app.get('/list_Items', getItem);
 
-console.log("Index????");
+
+//console.log("Index????");
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
 var server = app.listen(port, function(err){
 	if(err){

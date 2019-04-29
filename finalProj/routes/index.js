@@ -15,13 +15,14 @@ module.exports = {
 
     getItem: (req, res) => {
     	let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-		db.query(ItemQ, (err, res) => {
+		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
+
 			res.render('list_items.ejs', {title: "List Items",
 				Item: result
 			});
 
-		};
+		});
     },
 
 
