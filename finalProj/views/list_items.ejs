@@ -20,11 +20,8 @@
                 <td><%= item.ItemType %></td>
                 <td><%= item.Quantity %></td>
                 <td><%= item.ItemName %></td>
-                <td>@<%= item.SellerId %></td>
-                <td>
-                    <a href="/edit/<%= player.id %>" target="_blank" rel="noopener" class="btn btn-sm btn-success">Edit</a>
-                    <a href="/delete/<%= player.id %>" class="btn btn-sm btn-danger">Delete</a>
-                </td>
+                <td><%= item.SellerId %></td>
+               
             </tr>
             <% }) %>
         </tbody>

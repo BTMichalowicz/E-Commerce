@@ -60,7 +60,12 @@ db.query('CREATE TABLE if not exists Payment(	PaymentId int auto_increment,    C
 
 db.query('CREATE TABLE if not exists Buys(	CustomerId int,    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) );', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
 
+//db.query('insert into Seller values (null, "Adidas");', (err) =>{ if(err){throw err;} console.log("Inserted Item into Seller")});
 
+//db.query('insert into Item values (null, 20.95, \'Track Jacket\', 50, \'Adidas Track Jacket Blue\', 1);', (err) => {if(err){throw err;} console.log("Inserted items into Item")});
+
+
+//db.query('delete from Item Where SellerId = 1');
 
 global.db=db; //Global DB variable
 app.set('port', process.env.port || port); // set express to use this port
@@ -90,5 +95,6 @@ var server = app.listen(port, function(err){
 });
 
 //For testing purposes
-
-//db.end();
+//db.query('Drop Table if exists MyDB', (err) => {if (err){ throw err;} console.log("Database gone; goodbye");});;
+db.end();
+console.log("Goodbye");
