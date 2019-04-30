@@ -1,4 +1,4 @@
-var fs = require('fs');
+const fs = require('fs');
 var ejs = require('ejs')
 var express = require('express');
 var router = express.Router()
@@ -14,7 +14,7 @@ module.exports = {
     },
 
     getItem: (req, res) => {
-    	let ItemQ = "SELECT ItemId, ItemType, ItemName, Quantity, SellerId FROM Item ORDER BY ItemID ASC";
+    	let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
 		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
 
@@ -24,6 +24,19 @@ module.exports = {
 
 		});
     },
+
+    getSellerPage:  (req, res) => {
+        let ItemQ = "SELECT * FROM Seller ORDER BY SellerId ASC";
+        db.query(ItemQ, (err, result) => {
+            if (err) res.redirect('/');
+
+            res.render('list_sellers.ejs', {title: "List Items",
+                Seller: result
+            });
+
+        });
+    },
+
 
     getSeller: (req, res) => {
     	let ItemQ = "SELECT * FROM Seller ORDER BY SellerId ASC";
@@ -37,15 +50,46 @@ module.exports = {
 		});
     },
 
-    getPrices: (req, res) => {
-        let ItemQ = "SELECT ItemId, Price FROM Item ORDER BY ItemId ASC";
-        db.query(ItemQ, (err, result) => {
-            if (err) res.redirect('/');
+    addSellerPage: (req, res) =>{
+        res.render('add_seller.ejs', {
+            title: "Add a Seller!",
+            message: ''
+        });
+    },
 
-            res.render('see_price.ejs', {title: "See Prices!",
-                Item: result
-            });
+    addSeller: (req, res) => {
+          
+        if(req.body.SellerName == ''){
+            res.direct('list_sellers.ejs');
+        }
 
+        let message1 ='';
+        let SellerName = req.body.SellerName;
+
+        let nameQuery= "Select * from Seller where SellerName = '" + SellerName + "'";
+        db.query(nameQuery, (err, result)=>{
+            if(err){
+                return res.status(500).send(err);
+            }
+
+            if(result.length >0 && SellerName != null){
+                message1 = 'Name already exists in the database or is null';
+                res.render('add_seller.ejs',{
+                    message: message1, 
+                    title: "Add a Seller!"
+                });
+
+            } else { 
+
+                let query = "INSERT INTO Seller (SellerName) VALUES ('" + SellerName + "')";
+
+                db.query(query, (err,result) => {
+                    if(err) {
+                        return res.status(500).send(err);
+                    }
+                    res.redirect('/list_Sellers');
+                });
+            }
         });
     },
 

@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem, getSeller, getPrices} = require('./routes/index');
+ const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller} = require('./routes/index');
 
 
 const port = 5000;
@@ -26,13 +26,7 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
-/*db.query('create database socka;', (err, rows) => {
-	if (err) throw err;
 
-});
-*/
-
-//db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
 db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
@@ -78,10 +72,13 @@ app.use(fileUpload()); // configure fileupload
 
 //app.use(fileUpload());
 
+
 app.get('/', getHome);
 app.get('/list_Items', getItem);
-app.get('/list_Sellers', getSeller);
-app.get('/Prices', getPrices);
+app.get('/list_Sellers', getSellerPage);
+app.get('/addSeller', addSellerPage);
+app.post('/addSeller', addSeller);
+app.post('/list_Sellers', getSeller);
 
 
 //console.log("Index????");
