@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem, getSeller} = require('./routes/index');
+ const {getHome, getItem, getSeller, getPrices} = require('./routes/index');
 
 
 const port = 5000;
@@ -81,6 +81,7 @@ app.use(fileUpload()); // configure fileupload
 app.get('/', getHome);
 app.get('/list_Items', getItem);
 app.get('/list_Sellers', getSeller);
+app.get('/Prices', getPrices);
 
 
 //console.log("Index????");

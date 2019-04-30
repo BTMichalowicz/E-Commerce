@@ -1,15 +1,36 @@
-<%include partials/header.ejs %>
+<% include partials/header.ejs %>
+<div class="table-wrapper">
+    <% if (Item.length > 0) {%>
+    <table class="table table-hovered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Price</th>
+                
+        </thead>
+        <tbody>
+            <% Item.forEach((item, index) => { %>
+            <tr>
+                <th scope="row"><%= item.ItemId %></th>
+                <th scope="row"><%= item.price %></th>
+               
+               
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <% } else { %>
+    <p class="text-center">No Items found. </p>
+    <% } %>
+</div>
+</div>
+<br><br><br>
+       <footer class="container">
+        <p class="float-right"><a href="/list_Items">Back to top</a></p>
+        <p>© 2019 Database Designers Pro, Inc. <!-- · <a href="#">Privacy</a> · <a href="#">Terms</a> --></p>
+      </footer>
 
-<main role="main">
 
 
-  <!-- FOOTER -->
-  <footer class="container">
-    <p class="float-right"><a href="see_price.ejs">Back to top</a></p>
-    <p>© 2019 Database Designers Pro, Inc. <!-- · <a href="#">Privacy</a> · <a href="#">Terms</a> --></p>
-  </footer>
-
-<script src="js/jquery-3.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script><script src="js/bootstrap.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-
-</body></html>
+  </body>
+  </html>

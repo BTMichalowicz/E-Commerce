@@ -14,7 +14,7 @@ module.exports = {
     },
 
     getItem: (req, res) => {
-    	let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+    	let ItemQ = "SELECT ItemId, ItemType, ItemName, Quantity, SellerId FROM Item ORDER BY ItemID ASC";
 		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
 
@@ -35,6 +35,18 @@ module.exports = {
 			});
 
 		});
+    },
+
+    getPrices: (req, res) => {
+        let ItemQ = "SELECT ItemId, Price FROM Item ORDER BY ItemId ASC";
+        db.query(ItemQ, (err, result) => {
+            if (err) res.redirect('/');
+
+            res.render('see_price.ejs', {title: "See Prices!",
+                Item: result
+            });
+
+        });
     },
 
 
