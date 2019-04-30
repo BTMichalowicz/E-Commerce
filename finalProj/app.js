@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem} = require('./routes/index');
+ const {getHome, getItem, getSeller} = require('./routes/index');
 
 
 const port = 5000;
@@ -33,7 +33,7 @@ db.connect((err) => {
 */
 
 //db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
-//db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
+db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
 //db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
@@ -64,9 +64,6 @@ db.query('CREATE TABLE if not exists Buys(	CustomerId int,    ItemId int,    Qua
 
 //db.query('insert into Item values (null, 20.95, \'Track Jacket\', 50, \'Adidas Track Jacket Blue\', 1);', (err) => {if(err){throw err;} console.log("Inserted items into Item")});
 
-
-//db.query('delete from Item Where SellerId = 1');
-
 global.db=db; //Global DB variable
 app.set('port', process.env.port || port); // set express to use this port
 app.set('views', __dirname + '/views'); // set express to look in this folder to render our view
@@ -83,6 +80,7 @@ app.use(fileUpload()); // configure fileupload
 
 app.get('/', getHome);
 app.get('/list_Items', getItem);
+app.get('/list_Sellers', getSeller);
 
 
 //console.log("Index????");
@@ -96,5 +94,5 @@ var server = app.listen(port, function(err){
 
 //For testing purposes
 //db.query('Drop Table if exists MyDB', (err) => {if (err){ throw err;} console.log("Database gone; goodbye");});;
-db.end();
-console.log("Goodbye");
+//db.end();
+//console.log("Goodbye");

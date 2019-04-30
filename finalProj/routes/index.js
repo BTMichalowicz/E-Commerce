@@ -25,6 +25,18 @@ module.exports = {
 		});
     },
 
+    getSeller: (req, res) => {
+    	let ItemQ = "SELECT * FROM Seller ORDER BY SellerId ASC";
+		db.query(ItemQ, (err, result) => {
+			if (err) res.redirect('/');
+
+			res.render('list_sellers.ejs', {title: "List Items",
+				Seller: result
+			});
+
+		});
+    },
+
 
 };
        // let query = "SELECT * FROM `players` ORDER BY id ASC"; // query database to get all the players
