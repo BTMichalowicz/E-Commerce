@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem} = require('./routes/index');
+ const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller} = require('./routes/index');
 
 
 const port = 5000;
@@ -26,14 +26,8 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
-/*db.query('create database socka;', (err, rows) => {
-	if (err) throw err;
 
-});
-*/
-
-//db.query('drop database if exists myDB ;', (err) => {if(err) {throw err;} console.log("Dropping Relational Database");  } );
-//db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
+db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 
 //db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
@@ -61,7 +55,6 @@ db.query('CREATE TABLE if not exists Payment(	PaymentId int auto_increment,    C
 db.query('CREATE TABLE if not exists Buys(	CustomerId int,    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) );', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
 
 
-
 global.db=db; //Global DB variable
 app.set('port', process.env.port || port); // set express to use this port
 app.set('views', __dirname + '/views'); // set express to look in this folder to render our view
@@ -74,13 +67,17 @@ app.use(fileUpload()); // configure fileupload
 
 //middleware
 
-//app.use(fileUpload());
+
 
 app.get('/', getHome);
 app.get('/list_Items', getItem);
+app.get('/list_Sellers', getSellerPage);
+app.get('/addSeller', addSellerPage);
+app.post('/addSeller', addSeller);
+app.post('/list_Sellers', getSeller);
 
 
-//console.log("Index????");
+
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
 var server = app.listen(port, function(err){
 	if(err){
@@ -90,5 +87,6 @@ var server = app.listen(port, function(err){
 });
 
 //For testing purposes
-
+//db.query('Drop Table if exists MyDB', (err) => {if (err){ throw err;} console.log("Database gone; goodbye");});;
 //db.end();
+//console.log("Goodbye");
