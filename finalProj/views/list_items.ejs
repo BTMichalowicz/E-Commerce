@@ -21,6 +21,9 @@
                 <td><%= item.Quantity %></td>
                 <td><%= item.ItemName %></td>
                 <td><%= item.SellerId %></td>
+                <td>
+                <a href="/deleteItem/<%= item.ItemId %>" class="btn btn-sm btn-danger">Delete</a>
+                </td>
                
             </tr>
             <% }) %>
@@ -33,7 +36,7 @@
 </div>
 <br><br><br>
        <footer class="container">
-        <p class="float-right"><a href="/Prices">Back to top</a></p>
+        <p class="float-right"><a href="/list_Items">Back to top</a></p>
         <p>© 2019 Database Designers Pro, Inc. <!-- · <a href="#">Privacy</a> · <a href="#">Terms</a> --></p>
       </footer>
 
