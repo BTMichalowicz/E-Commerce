@@ -1,0 +1,7 @@
+TODO:
+
+Transaction implementation: Buying/Selling
+Other transactions (addiing/listing/removing customers?)
+Presentation Materials
+
+(Edit as needed)

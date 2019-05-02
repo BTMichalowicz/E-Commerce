@@ -30,7 +30,7 @@ module.exports = {
         db.query(ItemQ, (err, result) => {
             if (err) res.redirect('/');
 
-            res.render('list_sellers.ejs', {title: "List Items",
+            res.render('list_sellers.ejs', {title: "List Sellers!",
                 Seller: result
             });
 
@@ -43,7 +43,7 @@ module.exports = {
 		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
 
-			res.render('list_sellers.ejs', {title: "List Items",
+			res.render('list_sellers.ejs', {title: "List Sellers!",
 				Seller: result
 			});
 
@@ -91,6 +91,72 @@ module.exports = {
                 });
             }
         });
+    },
+    deleteSeller: (req, res) => {
+        let SellerId = req.params.SellerId;
+        
+        let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
+       
+
+       
+                db.query(deleteUserQuery, (err, result) => {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    res.redirect('/list_Sellers');
+                });
+            
+        
+    },
+
+     deleteItem: (req, res) => {
+        let ItemId = req.params.ItemId;
+        
+        let deleteUserQuery = 'DELETE FROM Item WHERE ItemId = '+ ItemId;
+       
+
+       
+                db.query(deleteUserQuery, (err, result) => {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    res.redirect('/list_Items');
+                });
+            
+        
+    }, 
+
+    addItemPage: (req, res) =>{
+        res.render('add_item.ejs', {
+            title: "Add an Item!!!",
+            message: ''
+        });
+    },
+
+    addItem: (req, res) => {
+          
+        if(req.body.ItemName == '' || req.body.Price == '' || req.body.ItemType == '' || req.body.Quantity == '' || req.body.SellerId == ''){
+            res.direct('list_items.ejs');
+        }
+
+        let message1 ='';
+        let ItemName = req.body.ItemName;
+        let Price = req.body.Price;
+        let ItemType = req.body.ItemType;
+        let Quantity = req.body.Quantity;
+        let SellerId = req.body.SellerId;
+
+
+         let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
+
+                db.query(query, (err,result) => {
+                    if(err) {
+                        return res.status(500).send(err);
+                    }
+                    res.redirect('/list_Items');
+                });
+
+        
     },
 
 

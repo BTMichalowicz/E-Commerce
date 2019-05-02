@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller} = require('./routes/index');
+ const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller, deleteSeller, deleteItem, addItemPage, addItem} = require('./routes/index');
 
 
 const port = 5000;
@@ -36,7 +36,7 @@ db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relatio
 //Table creation
 db.query('CREATE TABLE if not exists Seller(SellerId INT AUTO_INCREMENT,  SellerName VARCHAR(64) DEFAULT "Anonymous", Primary Key(SellerId) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Seller Table")});
 
-db.query('CREATE TABLE if not exists Item(	ItemId INT AUTO_INCREMENT,    Price DECIMAL(10,2) DEFAULT 0.00,    ItemType VARCHAR(45) default \'\',    Quantity INT DEFAULT 0,    ItemName VARCHAR(45) default \'Item\',    SellerId INT NOT NULL,    Primary Key(ItemId),    Foreign Key(SellerId) References Seller(SellerId) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Item Table")});
+db.query('CREATE TABLE if not exists Item(	ItemId INT AUTO_INCREMENT,    Price DECIMAL(10,2) DEFAULT 0.00,    ItemType VARCHAR(45) default \'\',    Quantity INT DEFAULT 0,    ItemName VARCHAR(45) default \'Item\',    SellerId INT NOT NULL,    Primary Key(ItemId),    Foreign Key(SellerId) References Seller(SellerId) ON DELETE NO ACTION ON UPDATE CASCADE) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Item Table")});
 
 db.query('CREATE TABLE if not exists Address(	AddId int auto_increment,	Address varchar(45) not null,    Town varchar(45) not null,    State char(2) not null,    ZIP int not null,    primary key(AddID) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Address Table")});
 
@@ -74,11 +74,15 @@ app.get('/list_Items', getItem);
 app.get('/list_Sellers', getSellerPage);
 app.get('/addSeller', addSellerPage);
 app.post('/addSeller', addSeller);
+app.get('/addItem', addItemPage);
+app.post('/addItem', addItem);
 app.post('/list_Sellers', getSeller);
+app.get('/deleteSeller/:SellerId', deleteSeller);
+app.get('/deleteItem/:ItemId', deleteItem);
 
 
 
-//db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
+//db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes
 var server = app.listen(port, function(err){
 	if(err){
 		throw err;
