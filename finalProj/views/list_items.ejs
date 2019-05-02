@@ -7,6 +7,7 @@
                 <th scope="col">ID</th>
 
                 <th scope="col">Item Type</th>
+                <th scope="col"> Price</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">ItemName</th>
                 <th scope="col">Seller ID</th>
@@ -15,13 +16,17 @@
         <tbody>
             <% Item.forEach((item, index) => { %>
             <tr>
-                <th scope="row"><%= item.ItemId %></th>
+                <th scope="row"><%= item.ItemId %></th> 
+
 
                 <td><%= item.ItemType %></td>
+                  <td>$<%= item.Price%></td>
                 <td><%= item.Quantity %></td>
                 <td><%= item.ItemName %></td>
                 <td><%= item.SellerId %></td>
                 <td>
+               <!-- <a href="/deleteItem/ class="btn btn-sm btn-danger">Delete</a> -->
+
                   <form class="add-purchase" action="" method="post" enctype="multipart/form-data">
                     <label for="quant">Buy Quantity: </label>
                     <input id="buyQuantity" type="text" name="buyQuant" value='' required>
