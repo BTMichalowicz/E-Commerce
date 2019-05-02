@@ -58,7 +58,7 @@ module.exports = {
     },
 
     addSeller: (req, res) => {
-          
+
         if(req.body.SellerName == ''){
             res.direct('list_sellers.ejs');
         }
@@ -75,11 +75,11 @@ module.exports = {
             if(result.length >0 && SellerName != null){
                 message1 = 'Name already exists in the database or is null';
                 res.render('add_seller.ejs',{
-                    message: message1, 
+                    message: message1,
                     title: "Add a Seller!"
                 });
 
-            } else { 
+            } else {
 
                 let query = "INSERT INTO Seller (SellerName) VALUES ('" + SellerName + "')";
 
@@ -94,37 +94,37 @@ module.exports = {
     },
     deleteSeller: (req, res) => {
         let SellerId = req.params.SellerId;
-        
-        let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
-       
 
-       
+        let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
+
+
+
                 db.query(deleteUserQuery, (err, result) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
                     res.redirect('/list_Sellers');
                 });
-            
-        
+
+
     },
 
      deleteItem: (req, res) => {
         let ItemId = req.params.ItemId;
-        
-        let deleteUserQuery = 'DELETE FROM Item WHERE ItemId = '+ ItemId;
-       
 
-       
+        let deleteUserQuery = 'DELETE FROM Item WHERE ItemId = '+ ItemId;
+
+
+
                 db.query(deleteUserQuery, (err, result) => {
                     if (err) {
                         return res.status(500).send(err);
                     }
                     res.redirect('/list_Items');
                 });
-            
-        
-    }, 
+
+
+    },
 
     addItemPage: (req, res) =>{
         res.render('add_item.ejs', {
@@ -134,7 +134,7 @@ module.exports = {
     },
 
     addItem: (req, res) => {
-          
+
         if(req.body.ItemName == '' || req.body.Price == '' || req.body.ItemType == '' || req.body.Quantity == '' || req.body.SellerId == ''){
             res.direct('list_items.ejs');
         }
@@ -156,13 +156,52 @@ module.exports = {
                     res.redirect('/list_Items');
                 });
 
-        
+
     },
 
+    addBuy: (req, res) => {
+      if(req.body.buyQuantity == '')
+      {
+        res.direct('list_items.ejs');
+      }
+      console.log(req.body);
+      let quant = req.body.buyQuant;
+      let id = req.body.ItemId;
+      let price = req.body.ItemPrice;
+      let curQuant = req.body.curQuant;
+      console.log(quant);
+      if(quant > curQuant)
+      {
+        message1 = 'Desried quantity  exceeds the current stock.';
+        res.render('list_Items.ejs',{
+            message: message1,
+            title: "Value too high."
+          });
+        }
+      else {
+        let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values (1, " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+          let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
+        db.query(query, (err, result) => {
+          console.log(result);
+          if(err){
+            return res.status(500).send(err);
+          }
 
+          let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
+
+          res.render('list_items.ejs', {title: "List Items",
+            Item: r
+          });
+          });
+        });
+      }
+
+    }
 };
+
+
        // let query = "SELECT * FROM `players` ORDER BY id ASC"; // query database to get all the players
 
         // execute query
-      
-           

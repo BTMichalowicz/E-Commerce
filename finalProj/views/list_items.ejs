@@ -24,10 +24,12 @@
                 <td>
                   <form class="add-purchase" action="" method="post" enctype="multipart/form-data">
                     <label for="quant">Buy Quantity: </label>
-                    <input id="buyQuantity" type="text" name="buy-quant" value="" required>
-                    <input id="ItemID" type="hidden" value="<%= item.ItemId%>" required>
+                    <input id="buyQuantity" type="text" name="buyQuant" value='' required>
+                    <input name= "ItemId" id="ItemId" type="hidden" value='<%= item.ItemId%>' required>
+                    <input name="ItemPrice" id="ItemPrice" type="hidden" value='<%= item.Price%>' required>
+                    <input name="curQuant" id="curQuant" type="hidden" value='<%= item.Quantity%>' required>
                     <input id="buy" type="submit" name="buy-submit" value="Buy!">
-                  </form>
+                </form>
                 </td>
             </tr>
             <% }) %>
