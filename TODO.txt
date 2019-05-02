@@ -1,0 +1,8 @@
+TODO:
+
+Transaction implementation: Buying/Selling
+Listing Popular Items
+Other transactions??
+Presentation Materials
+
+(Edit as needed)
