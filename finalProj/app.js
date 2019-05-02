@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller} = require('./routes/index');
+ const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller, deleteSeller} = require('./routes/index');
 
 
 const port = 5000;
@@ -75,10 +75,11 @@ app.get('/list_Sellers', getSellerPage);
 app.get('/addSeller', addSellerPage);
 app.post('/addSeller', addSeller);
 app.post('/list_Sellers', getSeller);
+app.get('/delete/:SellerId', deleteSeller);
 
 
 
-//db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");});
+//db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes
 var server = app.listen(port, function(err){
 	if(err){
 		throw err;

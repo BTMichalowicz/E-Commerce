@@ -30,7 +30,7 @@ module.exports = {
         db.query(ItemQ, (err, result) => {
             if (err) res.redirect('/');
 
-            res.render('list_sellers.ejs', {title: "List Items",
+            res.render('list_sellers.ejs', {title: "List Sellers!",
                 Seller: result
             });
 
@@ -43,7 +43,7 @@ module.exports = {
 		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
 
-			res.render('list_sellers.ejs', {title: "List Items",
+			res.render('list_sellers.ejs', {title: "List Sellers!",
 				Seller: result
 			});
 
@@ -92,6 +92,22 @@ module.exports = {
             }
         });
     },
+    deleteSeller: (req, res) => {
+        let SellerId = req.params.SellerId;
+        
+        let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
+       
+
+       
+                db.query(deleteUserQuery, (err, result) => {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    res.redirect('/list_Sellers');
+                });
+            
+        
+    }
 
 
 };
