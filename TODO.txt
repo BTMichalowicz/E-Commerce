@@ -1,8 +1,7 @@
 TODO:
 
 Transaction implementation: Buying/Selling
-Listing Popular Items
-Other transactions??
+Other transactions (addiing/listing/removing customers?)
 Presentation Materials
 
 (Edit as needed)
