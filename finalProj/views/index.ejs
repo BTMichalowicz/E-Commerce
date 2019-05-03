@@ -1,11 +1,26 @@
-<%include partials/header.ejs %>
-
-
+<% include partials/header.ejs %>
 <div class="table-wrapper">
   <h1> Welcome to Database Designers Pro!</h1>
   <h2> Please click the button corresponding to what type of action you would like to see! </h2>
 </div>
 
+<form class="login" action="" method="post">
+  <h3>Login</h3>
+  <label for="loginUser">Username: </label>
+  <input type="text" name="loginUser" value="">
+  <label for="loginPass">Password: </label>
+  <input type="password" name="loginPass" value="">
+  <input type="submit" name="login">
+</form>
+
+<form class="signup" action="" method="post">
+  <h3>Login</h3>
+  <label for="regUser">Username: </label>
+  <input type="text" name="regUser" value="">
+  <label for="regPass">Password: </label>
+  <input type="password" name="regPass" value="">
+  <input type="submit" name="register">
+</form>
 
 <br><br><br>
        <footer class="container">
@@ -16,4 +31,4 @@
 
 
   </body>
-  </html>
+</html>

@@ -198,6 +198,13 @@ module.exports = {
         });
       }
 
+    },
+
+    userLogin: (req,res) => {
+      return false;
+    },
+    userReg: (req,res) => {
+      return false;
     }
 };
 
