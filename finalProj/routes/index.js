@@ -216,12 +216,14 @@ module.exports = {
 
     userLogin: (req,res) => {
         if(req.body.loginUser == null || req.body.loginPass == null || req.body.loginUser == '' || req.body.loginPass == '')
+
         {
+          console.log("err at line 219");
             res.redirect("/");
         }else{
 
         
-        let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "'' and Pass = 'SHA2(" + req.body.loginPass + ", 256)';";
+        let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "' and Pass = 'SHA2(" + req.body.loginPass + ", 256)' ;";
         db.query(q, (err, result) => {
             if(err)
             {
@@ -231,7 +233,7 @@ module.exports = {
              console.log(req.body);
              res.redirect("/");
             }else{
-            //console.log(result);
+            console.log(result);
             res.redirect("/");
           }
 
@@ -247,7 +249,7 @@ module.exports = {
         }else{
 
         
-        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values (" + req.body.regUser + ", 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
+        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
         console.log(req.body);
         db.query(q, (err, result) => {
           if(err)
