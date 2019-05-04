@@ -266,6 +266,22 @@ module.exports = {
 
         });
       }
+    },
+
+    signup: (req, res) =>{
+       res.render('signup.ejs', {
+            title: "Database Designers Pro Signup!"
+        });
+
+
+    },
+
+    login: (req, res) =>{
+       res.render('login.ejs', {
+            title: "Database Designers Pro login!"
+        });
+
+
     }
 };
 
