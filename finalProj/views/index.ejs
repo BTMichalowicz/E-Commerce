@@ -4,21 +4,21 @@
   <h2> Please click the button corresponding to what type of action you would like to see! </h2>
 </div>
 
-<form class="login" action="" method="post">
+<form class="login" action="" method="POST" enctype="multipart/form-data">
   <h3>Login</h3>
   <label for="loginUser">Username: </label>
-  <input type="text" name="loginUser" value="">
+  <input type="text" name="loginUser" value="" required>
   <label for="loginPass">Password: </label>
-  <input type="password" name="loginPass" value="">
+  <input type="password" name="loginPass" value="" required>
   <input type="submit" name="login">
 </form>
 
-<form class="signup" action="" method="post">
-  <h3>Login</h3>
+<form class="signup" action="" method="POST" enctype="multipart/form-data">
+  <h3>Signup</h3>
   <label for="regUser">Username: </label>
-  <input type="text" name="regUser" value="">
+  <input type="text" name="regUser" value="" required>
   <label for="regPass">Password: </label>
-  <input type="password" name="regPass" value="">
+  <input type="password" name="regPass" value="" required>
   <input type="submit" name="register">
 </form>
 

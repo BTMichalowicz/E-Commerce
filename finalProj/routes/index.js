@@ -2,9 +2,22 @@ const fs = require('fs');
 var ejs = require('ejs')
 var express = require('express');
 var router = express.Router()
+let user = "NULL";
 module.exports = {
 
+    getBuy: (req, res) => {
+      let q = "select B.CustomerId, B.ItemId, I.ItemName, B.Quantity, B.Price from Buys B, Item I where B.CustomerId = " + user + " and B.ItemId = I.ItemId and B.Purchase = NULL;";
+      db.query(q, (err, result) => {
+        if(err) {
+          return res.status(500).send(err);
+        }
+        res.render('transaction.ejs', {
+          title: "Shopping Cart"
+          Item: result
+        });
 
+      });
+    },
     getHome: (req, res) => {
 
         res.render('index.ejs', {
@@ -14,6 +27,7 @@ module.exports = {
     },
 
     getItem: (req, res) => {
+
     	let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
 		db.query(ItemQ, (err, result) => {
 			if (err) res.redirect('/');
@@ -201,10 +215,34 @@ module.exports = {
     },
 
     userLogin: (req,res) => {
-      return false;
+        if(req.body.loginUser == '' || req.body.loginPass == '')
+        {
+            res.redirect("index.ejs");
+        }
+        let q = "select CustomerId from Customer where CustomerId = " + req.body.loginUser + " and Pass = SHA2(" + req.body.loginPass + ", 256);";
+        db.query(q, (err, result) => {
+            if(err)
+            {
+              return res.status(500).send(err);
+            }
+            console.log(result);
+            res.redirect("index.ejs")
+        });
     },
     userReg: (req,res) => {
-      return false;
+        if(req.body.regUser == '' || req.body.regPass == '')
+        {
+          res.redirect("index.ejs");
+        }
+        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values (" + req.body.regUser + ", SHA2(" + req.regPass + ", 256), NULL, NULL, NULL);";
+        db.query(q, (err, result) => {
+          if(err)
+          {
+            return res.status(500).send(err);
+          }
+          console.log(result);
+          res.redirect("index.ejs");
+        });
     }
 };
 
