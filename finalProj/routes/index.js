@@ -6,14 +6,14 @@ let user = "NULL";
 module.exports = {
 
     getBuy: (req, res) => {
-      let q = "select B.CustomerId, B.ItemId, I.ItemName, B.Quantity, B.Price from Buys B, Item I where B.CustomerId = " + user + " and B.ItemId = I.ItemId and B.Purchase = NULL;";
+      let q = "select B.CustomerId, B.ItemId, I.ItemName, B.Quantity, B.Price from Buys B, Item I where B.CustomerId = " + user + " and B.ItemId = I.ItemId and B.PaymentId = NULL;";
       db.query(q, (err, result) => {
         if(err) {
           return res.status(500).send(err);
         }
         res.render('transaction.ejs', {
-          title: "Shopping Cart"
-          Item: result
+          title: "Shopping Cart",
+          Buys: result
         });
 
       });
@@ -215,34 +215,55 @@ module.exports = {
     },
 
     userLogin: (req,res) => {
-        if(req.body.loginUser == '' || req.body.loginPass == '')
+        if(req.body.loginUser == null || req.body.loginPass == null || req.body.loginUser == '' || req.body.loginPass == '')
         {
-            res.redirect("index.ejs");
-        }
-        let q = "select CustomerId from Customer where CustomerId = " + req.body.loginUser + " and Pass = SHA2(" + req.body.loginPass + ", 256);";
+            res.redirect("/");
+        }else{
+
+        
+        let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "'' and Pass = 'SHA2(" + req.body.loginPass + ", 256)';";
         db.query(q, (err, result) => {
             if(err)
             {
-              return res.status(500).send(err);
-            }
-            console.log(result);
-            res.redirect("index.ejs")
+              console.log(err);
+             console.log("Error in UserLogin");
+             console.log(result);
+             console.log(req.body);
+             res.redirect("/");
+            }else{
+            //console.log(result);
+            res.redirect("/");
+          }
+
         });
+      }
     },
     userReg: (req,res) => {
+      console.log(req.body)
         if(req.body.regUser == '' || req.body.regPass == '')
         {
-          res.redirect("index.ejs");
-        }
-        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values (" + req.body.regUser + ", SHA2(" + req.regPass + ", 256), NULL, NULL, NULL);";
+          console.log(req.body);
+          res.redirect("/");
+        }else{
+
+        
+        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values (" + req.body.regUser + ", 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
+        console.log(req.body);
         db.query(q, (err, result) => {
           if(err)
           {
-            return res.status(500).send(err);
-          }
+            cconsole.log("Error in UserReg");
+            res.redirect("/");
+          }else{
+
+
           console.log(result);
-          res.redirect("index.ejs");
+          console.log(req.body);
+          res.redirect("/");
+        }
+
         });
+      }
     }
 };
 
