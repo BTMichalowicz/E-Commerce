@@ -18,8 +18,6 @@ module.exports = {
         });
 
       });
-    },
-    getHome: (req, res) => {
 
         res.render('index.ejs', {
             title: "Database Designers Pro!"
