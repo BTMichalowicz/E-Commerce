@@ -6,11 +6,12 @@ let user = "NULL";
 module.exports = {
 
     getBuy: (req, res) => {
-      let q = "select B.CustomerId, B.ItemId, I.ItemName, B.Quantity, B.Price from Buys B, Item I where B.CustomerId = " + user + " and B.ItemId = I.ItemId and B.PaymentId = NULL;";
+      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId";
       db.query(q, (err, result) => {
         if(err) {
           return res.status(500).send(err);
         }
+        console.log(result);
         res.render('transaction.ejs', {
           title: "Shopping Cart",
           Buys: result
@@ -193,7 +194,7 @@ module.exports = {
           });
         }
       else {
-        let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values (1, " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+        let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ('" + user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
           let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
         db.query(query, (err, result) => {
           console.log(result);
@@ -216,13 +217,12 @@ module.exports = {
 
     userLogin: (req,res) => {
         if(req.body.loginUser == null || req.body.loginPass == null || req.body.loginUser == '' || req.body.loginPass == '')
-
         {
           console.log("err at line 219");
             res.redirect("/");
         }else{
 
-        
+        console.log(req.body);
         let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "' and Pass = 'SHA2(" + req.body.loginPass + ", 256)' ;";
         db.query(q, (err, result) => {
             if(err)
@@ -233,6 +233,11 @@ module.exports = {
              console.log(req.body);
              res.redirect("/");
             }else{
+              if(result == "")
+              {
+                console.log("not in db");
+              }
+            user = result[0].CustomerId;
             console.log(result);
             res.redirect("/");
           }
@@ -248,19 +253,21 @@ module.exports = {
           res.redirect("/");
         }else{
 
-        
+
         let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
         console.log(req.body);
         db.query(q, (err, result) => {
           if(err)
           {
-            cconsole.log("Error in UserReg");
+            console.log("Error in UserReg");
             res.redirect("/");
           }else{
 
 
           console.log(result);
           console.log(req.body);
+          user = req.body.regUser;
+          console.log(user);
           res.redirect("/");
         }
 

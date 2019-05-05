@@ -25,7 +25,7 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
-// db.query('drop Database myDB');
+//db.query('drop Database myDB');
 db.query('create Database if not exists myDB ;', (err) => {if(err) {throw err;} console.log("Creating Relational Database");  } );
 db.query('use myDB ;', (err) => {if(err) {throw err;} console.log("Using Relational Database");  } );
 

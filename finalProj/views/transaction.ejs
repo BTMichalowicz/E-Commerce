@@ -15,7 +15,7 @@
         </thead>
 
       <tbody>
-          <% Item.forEach((item, index) => { %>
+          <% Buys.forEach((item, index) => { %>
           <tr>
               <th scope="row"><%= item.ItemId %></th>
 
@@ -24,7 +24,7 @@
                 <td>$<%= item.Price%></td>
               <td><%= item.Quantity %></td>
               <td><%= item.ItemName %></td>
-
+              <td><%= item.SellerId %></td>
           </tr>
           <% }) %>
       </tbody>
