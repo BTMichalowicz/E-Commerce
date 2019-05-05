@@ -179,48 +179,60 @@ addBuy: (req, res) => {
     res.direct('list_items.ejs');
   }
   console.log(req.body);
-  let quant = req.body.buyQuant;
+  let quant = parseInt(req.body.buyQuant);
   let id = req.body.ItemId;
   let price = req.body.ItemPrice;
-  let curQuant = req.body.curQuant;
+  let curQuant = parseInt(req.body.curQuant);
+  let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+  console.log(curQuant)
   console.log(quant);
-  if(quant > curQuant)
-  {
-    message1 = 'Desried quantity  exceeds the current stock.';
+ // console.log(quant);
+ if(curQuant-quant < 0)
+ {
+
+
+  message1 = 'Desried quantity  exceeds the current stock.';
+  console.log(message1);
+  db.query(ItemQ, (err, result)=>{
+
     res.render('list_Items.ejs',{
       message: message1,
-      title: "Value too high."
+      title: "Value too high.",
+      Item: result
     });
-  }
-  else {
-    console.log(user);
-    let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ('"+user+"', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
-    let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
-    db.query(query, (err, result) => {
-      console.log(result);
-      if(err){
-        return res.status(500).send(err);
-      }
+  })
+
+}
+else {
+  console.log(user);
+  let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ('"+user+"', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+  let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
+  db.query(query, (err, result) => {
+    console.log(result);
+    if(err){
+      return res.status(500).send(err);
+    }
 
 
-      db.query(q2, (err, result2)=>{let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err, r) => {
+    db.query(q2, (err2, result2)=>{
+      if(err2) {throw err2;}
+      db.query(ItemQ, (err, r) => {
 
-          if(err){ throw err;}
+        if(err){ throw err;}
 
-          else{
-            if (err) res.redirect('/');
+        else{
+          if (err) res.redirect('/');
 
-            res.render('list_items.ejs', {title: "List Items",
-              Item: r
-            });
-          }
-        });
+          res.render('list_items.ejs', {title: "List Items",
+            Item: r
+          });
+        }
       });
-
-      
     });
-  }
+
+
+  });
+}
 
 },
 
@@ -232,7 +244,7 @@ userLogin: (req,res) => {
     res.redirect("/");
   }else{
 
-    
+
     let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "' and Pass = 'SHA2(" + req.body.loginPass + ", 256)' ;";
     db.query(q, (err, result) => {
       if(err)
@@ -264,7 +276,7 @@ userReg: (req,res) => {
     res.redirect("/");
   }else{
 
-    
+
     let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
     console.log(req.body);
     db.query(q, (err, result) => {
@@ -274,10 +286,10 @@ userReg: (req,res) => {
         res.redirect("/");
       }else{
         if(user == 'NULL'){
-        user = req.body.regUser
-      }else{
-        user = req.body.regUser
-      }
+          user = req.body.regUser
+        }else{
+          user = req.body.regUser
+        }
 
 
         console.log(result);
