@@ -51,7 +51,7 @@ db.query('CREATE TABLE if not exists CreditCard(	Num bigint,    Own varchar(45) 
 
 db.query('CREATE TABLE if not exists Payment(	PaymentId int auto_increment,    CreditCard bigint not null,	Amount decimal(10,2),     primary key(PaymentId),    foreign key(CreditCard) references CreditCard(Num) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Payment Table")});
 
-db.query('CREATE TABLE if not exists Buys(BuysId int auto_increment,	CustomerId varchar(45),    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(BuysId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) )AUTO_INCREMENT=1;', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
+db.query('CREATE TABLE if not exists Buys(BuysId INT AUTO_INCREMENT,	CustomerId varchar(45),    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(BuysId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) )AUTO_INCREMENT=1;', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
 
 
 global.db=db; //Global DB variable

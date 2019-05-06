@@ -5,57 +5,35 @@ var router = express.Router()
 let user = "NULL";
 module.exports = {
 
-<<<<<<< HEAD
-    getBuy: (req, res) => {
-      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
-      db.query(q, (err, result) => {
-        if(err) {
-          return res.status(500).send(err);
-        }
-        console.log(result);
 
-
-          res.render('transaction.ejs', {
-            title: "Shopping Cart",
-            Buys: result
-          });
-
-
-=======
   getBuy: (req, res) => {
-    let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId";
+    let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
     db.query(q, (err, result) => {
       if(err) {
         return res.status(500).send(err);
       }
       console.log(result);
+
+
       res.render('transaction.ejs', {
         title: "Shopping Cart",
         Buys: result
->>>>>>> c5f2273dda2dd405983122a9b78b5e3c841a42dd
       });
-    },
-
-<<<<<<< HEAD
-    getHome: (req, res) => {
-        res.render('index.ejs', {
-            title: "Database Designers Pro!"
-        });
-=======
     });
->>>>>>> c5f2273dda2dd405983122a9b78b5e3c841a42dd
+  },
+
+
+  getHome: (req, res) => {
+    res.render('index.ejs', {
+      title: "Database Designers Pro!"
+    });
 
     
 
   },
 
-  getHome: (req, res)=>{
 
-   res.render('index.ejs', {
-    title: "Database Designers Pro!"
-  });
- },
- getItem: (req, res) => {
+  getItem: (req, res) => {
 
    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
    db.query(ItemQ, (err, result) => {
@@ -220,59 +198,37 @@ addBuy: (req, res) => {
       message: message1,
       title: "Value too high."
     });
-  }
-  else {
-    let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ('" + user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+  } else {
+
+
+
+
+    let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ("+ "'"+user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
     let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
     db.query(query, (err, result) => {
       console.log(result);
       if(err){
         return res.status(500).send(err);
       }
-
-      
-      db.query(q2, (err2, res2)=>{
-        if(err2){
-          return res.status(500).send(err2);
+      db.query(q2, (er, re) => {
+        if(er) {
+          return res.status(500).send(er);
         }
-<<<<<<< HEAD
-      else {
-        let query = "insert into Buys (BuysId, CustomerId, ItemId, Quantity, Price, PaymentId) values (NULL, '" + user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
-          let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
-        db.query(query, (err, result) => {
-          console.log(result);
-          if(err){
-            return res.status(500).send(err);
-          }
-          db.query(q2, (er, re) => {
-            if(er) {
-              return res.status(500).send(er);
-            }
-            let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-          db.query(ItemQ, (err, r) => {
-            if (err) res.redirect('/');
-
-            res.render('list_items.ejs', {title: "List Items",
-              Item: r
-            });
-            });
-          });
-
-=======
         let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err3, r) => {
-          if (err3) res.redirect('/');
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
 
           res.render('list_items.ejs', {title: "List Items",
             Item: r
           });
->>>>>>> c5f2273dda2dd405983122a9b78b5e3c841a42dd
         });
-
       });
-
     });
+
+
+
   }
+
 
 },
 
@@ -294,7 +250,7 @@ userLogin: (req,res) => {
         console.log(req.body);
         res.redirect("/");
       }else{
-        if(result == "")
+        if(result == [])
         {
           console.log("not in db");
         }
@@ -349,26 +305,23 @@ login: (req, res) =>{
   title: "Database Designers Pro login!"
 });
 
-<<<<<<< HEAD
-    },
+ 
+},
 
-    goPurchase: (req, res) => {
-      let q = "select SUM(Price) as Total from Buys where CustomerId = '" + user + "' and PaymentId is NULL;";
-      db.query(q, (err, result) =>{
-        if(err) {
-          return res.status(500).send(er);
-        }
-        console.log(result);
-        res.render('purchase.ejs', {
-          title: 'Make Purchase',
-          Total: result[0].Total
-        });
-      });
+goPurchase: (req, res) => {
+  let q = "select SUM(Price) as Total from Buys where CustomerId = '" + user + "' and PaymentId is NULL;";
+  db.query(q, (err, result) =>{
+    if(err) {
+      return res.status(500).send(er);
     }
-=======
-
+    console.log(result);
+    res.render('purchase.ejs', {
+      title: 'Make Purchase',
+      Total: result[0].Total
+    });
+  });
 }
->>>>>>> c5f2273dda2dd405983122a9b78b5e3c841a42dd
+
 };
 
 
