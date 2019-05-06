@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
- const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller, deleteSeller, deleteItem, addItemPage, addItem, addBuy, userLogin, userReg, getBuy, signup, login} = require('./routes/index');
+ const {getHome, getItem, getSellerPage, getSeller, addSellerPage, addSeller, deleteSeller, deleteItem, addItemPage, addItem, addBuy, userLogin, userReg, getBuy, signup, login, goPurchase} = require('./routes/index');
 
 const port = 5000;
 
@@ -51,7 +51,7 @@ db.query('CREATE TABLE if not exists CreditCard(	Num bigint,    Own varchar(45) 
 
 db.query('CREATE TABLE if not exists Payment(	PaymentId int auto_increment,    CreditCard bigint not null,	Amount decimal(10,2),     primary key(PaymentId),    foreign key(CreditCard) references CreditCard(Num) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Payment Table")});
 
-db.query('CREATE TABLE if not exists Buys(	CustomerId varchar(45),    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) );', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
+db.query('CREATE TABLE if not exists Buys(BuysId int auto_increment,	CustomerId varchar(45),    ItemId int,    Quantity int not null,    Price decimal(10,2),    PaymentId int,    primary key(BuysId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId),    foreign key(PaymentId) references Payment(PaymentId) )AUTO_INCREMENT=1;', (err) => {if (err) {throw err;} console.log("Created Buys Table");});
 
 
 global.db=db; //Global DB variable
@@ -84,7 +84,7 @@ app.post('/signup', userReg);
 app.get('/transaction', getBuy);
 app.get('/login', login);
 app.get('/signup', signup);
-
+app.post('/transaction', goPurchase);
 
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes
 var server = app.listen(port, function(err){

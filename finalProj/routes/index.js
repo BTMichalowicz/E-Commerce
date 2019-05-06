@@ -6,19 +6,24 @@ let user = "NULL";
 module.exports = {
 
     getBuy: (req, res) => {
-      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId";
+      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
       db.query(q, (err, result) => {
         if(err) {
           return res.status(500).send(err);
         }
         console.log(result);
-        res.render('transaction.ejs', {
-          title: "Shopping Cart",
-          Buys: result
-        });
+
+
+          res.render('transaction.ejs', {
+            title: "Shopping Cart",
+            Buys: result
+          });
+
 
       });
+    },
 
+    getHome: (req, res) => {
         res.render('index.ejs', {
             title: "Database Designers Pro!"
         });
@@ -192,22 +197,27 @@ module.exports = {
           });
         }
       else {
-        let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ('" + user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+        let query = "insert into Buys (BuysId, CustomerId, ItemId, Quantity, Price, PaymentId) values (NULL, '" + user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
           let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
         db.query(query, (err, result) => {
           console.log(result);
           if(err){
             return res.status(500).send(err);
           }
+          db.query(q2, (er, re) => {
+            if(er) {
+              return res.status(500).send(er);
+            }
+            let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+          db.query(ItemQ, (err, r) => {
+            if (err) res.redirect('/');
 
-          let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err, r) => {
-          if (err) res.redirect('/');
+            res.render('list_items.ejs', {title: "List Items",
+              Item: r
+            });
+            });
+          });
 
-          res.render('list_items.ejs', {title: "List Items",
-            Item: r
-          });
-          });
         });
       }
 
@@ -287,10 +297,24 @@ module.exports = {
         });
 
 
+    },
+
+    goPurchase: (req, res) => {
+      let q = "select SUM(Price) as Total from Buys where CustomerId = '" + user + "' and PaymentId is NULL;";
+      db.query(q, (err, result) =>{
+        if(err) {
+          return res.status(500).send(er);
+        }
+        console.log(result);
+        res.render('purchase.ejs', {
+          title: 'Make Purchase',
+          Total: result[0].Total
+        });
+      });
     }
 };
 
 
        // let query = "SELECT * FROM `players` ORDER BY id ASC"; // query database to get all the players
 
-        // execute query
+// execute query
