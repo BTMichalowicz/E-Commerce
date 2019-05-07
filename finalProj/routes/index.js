@@ -272,13 +272,20 @@ userLogin: (req,res) => {
     db.query(q, (err, result) => {
       if(err)
       {
-;
+        ;
         res.redirect("/");
       }else{
-        console.log(result);
-        user = result[0].CustomerId;
-        console.log(result[0].Pass);
-        res.redirect("/");
+        if(result.length==0){
+          //Bad username or password
+          res.render("login.ejs", {
+            title:"BAD CREDS"
+          });
+        }else{
+          console.log(result);
+          user = result[0].CustomerId;
+          console.log(result[0].Pass);
+          res.redirect("/");
+        }
       }
 
     });
@@ -293,7 +300,7 @@ userReg: (req,res) => {
   }else{
 
 
-    let check = "select * from Customer where CustomerId = '" + req.body.regUser + "' and Pass = SHA2('" + req.body.regPass + "', 256)";
+    let check = "select * from Customer where CustomerId = '" + req.body.regUser + "' and Pass = SHA2('" + req.body.regPass + "', 256);";
 
     db.query(check, (err1, result1)=>{
       if(err1){
@@ -399,10 +406,10 @@ makePurchase: (req, res) => {
           }
           // TODO: add address fields so we can update customer and shipping
 
-          });
         });
       });
     });
+  });
 
 }
 };
