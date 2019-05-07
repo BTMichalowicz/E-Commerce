@@ -39,7 +39,7 @@ db.query('CREATE TABLE if not exists Item(	ItemId INT AUTO_INCREMENT,    Price D
 
 db.query('CREATE TABLE if not exists Address(	AddId int auto_increment,	Address varchar(45) not null,    Town varchar(45) not null,    State char(2) not null,    ZIP int not null,    primary key(AddID) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Address Table")});
 
-db.query('CREATE TABLE if not exists Customer(	CustomerId varchar(45) not null, Pass varchar(64) not null, FirstName varchar(45),    LastName varchar(45),    Address int,    primary key(CustomerId),     foreign key(Address) references Address(AddId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Customer Table")});
+db.query('CREATE TABLE if not exists Customer(	CustomerId varchar(45) not null, Pass varchar(255) not null, FirstName varchar(45),    LastName varchar(45),    Address int,    primary key(CustomerId),     foreign key(Address) references Address(AddId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Customer Table")});
 
 db.query('CREATE TABLE if not exists Reviews(	CustomerId varchar(45),    ItemId int,    Rating int not null,    Review varchar(256),    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId) );', (err) => {if (err) {throw err;} console.log("Created Reviews Table")});
 
@@ -84,7 +84,8 @@ app.post('/signup', userReg);
 app.get('/transaction', getBuy);
 app.get('/login', login);
 app.get('/signup', signup);
-app.post('/transaction', goPurchase);
+//app.post('/transaction', goPurchase);
+app.get('/purchase', goPurchase);
 app.post('/purchase', makePurchase);
 
 //db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes

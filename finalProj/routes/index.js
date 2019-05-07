@@ -55,8 +55,6 @@ module.exports = {
         if(err) {
           return res.status(500).send(err);
         }
-        console.log(result);
-
 
         res.render('transaction.ejs', {
           title: "Shopping Cart",
@@ -64,7 +62,7 @@ module.exports = {
         });
       });
     }
-    
+
   },
 
 
@@ -215,12 +213,12 @@ addBuy: (req, res) => {
   {
     res.direct('list_items.ejs');
   }
-  console.log(req.body);
+
   let quant = parseInt(req.body.buyQuant);
   let id = req.body.ItemId;
   let price = req.body.ItemPrice;
   let curQuant = parseInt(req.body.curQuant);
-  console.log(quant);
+
   if(quant > curQuant)
   {
     message1 = 'Desried quantity  exceeds the current stock.';
@@ -236,7 +234,7 @@ addBuy: (req, res) => {
     let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ("+ "'"+user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
     let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
     db.query(query, (err, result) => {
-      console.log(result);
+
       if(err){
         return res.status(500).send(err);
       }
@@ -265,27 +263,21 @@ addBuy: (req, res) => {
 userLogin: (req,res) => {
   if(req.body.loginUser == null || req.body.loginPass == null || req.body.loginUser == '' || req.body.loginPass == '')
   {
-    console.log("err at line 258");
+
     res.redirect("/");
   }else{
 
-    console.log(req.body);
-    let q = "select CustomerId from Customer where CustomerId = '" + req.body.loginUser + "' and Pass = 'SHA2(" + req.body.loginPass + ", 256)' ;";
+
+    let q = "select CustomerId, Pass from Customer where CustomerId = '" + req.body.loginUser + "' and Pass = SHA2('" + req.body.loginPass + "', 256) ;";
     db.query(q, (err, result) => {
       if(err)
       {
-        console.log(err);
-        console.log("Error in UserLogin");
-        console.log(result);
-        console.log(req.body);
+;
         res.redirect("/");
       }else{
-        if(result == [])
-        {
-          console.log("not in db");
-        }
-        user = result[0].CustomerId;
         console.log(result);
+        user = result[0].CustomerId;
+        console.log(result[0].Pass);
         res.redirect("/");
       }
 
@@ -293,15 +285,15 @@ userLogin: (req,res) => {
   }
 },
 userReg: (req,res) => {
-  console.log(req.body)
+
   if(req.body.regUser == '' || req.body.regPass == '')
   {
-    console.log(req.body);
+
     res.redirect("/");
   }else{
 
 
-    let check = "select * from Customer where CustomerId = '" + req.body.regUser + "' and Pass = 'SHA2(" + req.body.regPass + ", 256)'";
+    let check = "select * from Customer where CustomerId = '" + req.body.regUser + "' and Pass = SHA2('" + req.body.regPass + "', 256)";
 
     db.query(check, (err1, result1)=>{
       if(err1){
@@ -314,20 +306,19 @@ userReg: (req,res) => {
           message: 'User already in Database!'
         });
 
-      }else{   
-        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
-        console.log(req.body);
+      }else{
+        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', SHA2('" + req.body.regPass + "', 256), NULL, NULL, NULL);";
+
         db.query(q, (err, result) => {
           if(err){
-            console.log("Error in UserReg");
+
             res.redirect("/");
           }else{
 
 
-            console.log(result);
-            console.log(req.body);
+
             user = req.body.regUser;
-            console.log(user);
+
             res.redirect("/");
           }
 
@@ -336,7 +327,7 @@ userReg: (req,res) => {
 
       }
     });
-    
+
   }
 },
 
@@ -370,27 +361,22 @@ goPurchase: (req, res) => {
     if(err) {
       return res.status(500).send(er);
     }
-    console.log(result);
+
     res.render('purchase.ejs', {
       title: 'Make Purchase',
       Total: result[0].Total
     });
-<<<<<<< HEAD
   });
-},
-=======
-  });}
+} },
 
-}
->>>>>>> d8486efde16bf240a5f12db3d8f6a30cc85eb384
 
 makePurchase: (req, res) => {
-  if(req.body.CCN == '' || req.body.type == null || req.body.type == "" || req.body.month == null || req.body.year == null)
+  if(req.body.CCN == '' || req.body.CCN.length < 16|| req.body.type == null || req.body.type == "" || req.body.month == null || req.body.year == null)
   {
     console.log('error');
   }
   console.log("makePurchase");
-  let q = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", " + req.body.type + ", " + "STR_TO_DATE('" + req.body.month + "-" + req.body.year + "', '%m-%y'));";
+  let q = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", '" + req.body.type + "', " + "STR_TO_DATE('" + req.body.month + "-" + req.body.year + "', '%m-%y'));";
   db.query(q, (err, result) => {
     if(err) {
       return res.status(500).send(err);
@@ -406,10 +392,18 @@ makePurchase: (req, res) => {
           return res.status(500).send(err);
         }
         console.log(re);
-        let q4 = "update Buys B set B.PaymentId = " + re[0].PaymentId + " where B.PaymentId is NULL and B.CustomerId = " + user + ";";
+        let q4 = "update Buys B set B.PaymentId = " + re[0].PaymentId + " where B.PaymentId is NULL and B.CustomerId = '" + user + "';";
+        db.query(a4, (e1, r1) => {
+          if(e1) {
+            return res.status(500).send(err);
+          }
+          // TODO: add address fields so we can update customer and shipping
+
+          });
+        });
       });
     });
-  });
+
 }
 };
 
