@@ -28,7 +28,7 @@ module.exports = {
       title: "Database Designers Pro!"
     });
 
-    
+
 
   },
 
@@ -305,7 +305,7 @@ login: (req, res) =>{
   title: "Database Designers Pro login!"
 });
 
- 
+
 },
 
 goPurchase: (req, res) => {
@@ -320,8 +320,35 @@ goPurchase: (req, res) => {
       Total: result[0].Total
     });
   });
-}
+},
 
+makePurchase: (req, res) => {
+  if(req.body.CCN == '' || req.body.type == null || req.body.type == "" || req.body.month == null || req.body.year == null)
+  {
+    console.log('error');
+  }
+  console.log("makePurchase");
+  let q = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", " + req.body.type + ", " + "STR_TO_DATE('" + req.body.month + "-" + req.body.year + "', '%m-%y'));";
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(500).send(err);
+    }
+    let q2 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (NULL, " + req.body.CCN + ", " + req.body.Total + ", '" + user + "');";
+    db.query(q2, (e, r) =>{
+      if(e){
+        return res.status(500).send(err);
+      }
+      let q3 = "(select P.PaymentId from Payment P where P.CustomerId = '" + user + "') except (select B.PaymentId from Buys B where B.CustomerId = '" + user + "');";
+      db.query(q3, (er, re) => {
+        if(er){
+          return res.status(500).send(err);
+        }
+        console.log(re);
+        let q4 = "update Buys B set B.PaymentId = " + re[0].PaymentId + " where B.PaymentId is NULL and B.CustomerId = " + user + ";";
+      });
+    });
+  });
+}
 };
 
 

@@ -1,8 +1,19 @@
 <% include partials/header.ejs %>
 <% if(Total > 0) {%>
   <p class="text-center"> Total: $<%= Total %> </p>
-<form>
-  <label value="Purchase">
+<form form class="purchase" action="" method="POST" enctype="multipart/form-data">
+  <label value="Purchase">Purchase:</label> <br><br>
+  <label value="Credit Card Number">Credit Card Number: </label>
+  <input type="text" name="CCN" value=""> <br><br>
+  <label value="Company">Company: </label>
+  <input type="radio" name="type" value="MasterCard"> MasterCard <br>
+  <input type="radio" name="type" value="Visa"> Visa <br>
+  <input type="radio" name="type" value="Discover"> Discover <br>
+  <input type="radio" name="type" value="Chase"> Chase <br>
+  <label value="Expiration Date">Expiration Date:</label>
+  <input type="number" name="month" value="" maxlength="2" min="1" max="12">/<input type="number" name="year" value="" maxlength="4" min="2018"> <br><br>
+  <input type="hidden" name="Total" value=<%= Total %>>
+  <input type="submit" name="purchase" value="MakePurchase">
 </form>
 
 <% }else {%>
