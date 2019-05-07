@@ -6,26 +6,72 @@ let user = "NULL";
 module.exports = {
 
 
-  getBuy: (req, res) => {
-    let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
-    db.query(q, (err, result) => {
-      if(err) {
+  deleteSeller: (req, res) => {
+    let SellerId = req.params.SellerId;
+
+    let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
+
+
+
+    db.query(deleteUserQuery, (err, result) => {
+      if (err) {
         return res.status(500).send(err);
       }
-      console.log(result);
-
-
-      res.render('transaction.ejs', {
-        title: "Shopping Cart",
-        Buys: result
-      });
+      res.redirect('/list_Sellers');
     });
+
+
+  },
+
+  deleteItem: (req, res) => {
+    let ItemId = req.params.ItemId;
+
+    let deleteUserQuery = 'DELETE FROM Item WHERE ItemId = '+ ItemId;
+
+
+
+    db.query(deleteUserQuery, (err, result) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.redirect('/list_Items');
+    });
+
+
+  },
+
+
+
+  getBuy: (req, res) => {
+
+    if(user =="NULL"){
+      res.render('index.ejs',{
+        title: "Database Designers Pro!",
+        message: 'User not logged in!'
+      });
+    }else{
+      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
+      db.query(q, (err, result) => {
+        if(err) {
+          return res.status(500).send(err);
+        }
+        console.log(result);
+
+
+        res.render('transaction.ejs', {
+          title: "Shopping Cart",
+          Buys: result
+        });
+      });
+    }
+    
   },
 
 
   getHome: (req, res) => {
     res.render('index.ejs', {
-      title: "Database Designers Pro!"
+      title: "Database Designers Pro!",
+      message: ''
     });
 
     
@@ -113,39 +159,8 @@ addSeller: (req, res) => {
     }
   });
 },
-deleteSeller: (req, res) => {
-  let SellerId = req.params.SellerId;
-
-  let deleteUserQuery = 'DELETE FROM Seller WHERE SellerId = '+ SellerId;
 
 
-
-  db.query(deleteUserQuery, (err, result) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-    res.redirect('/list_Sellers');
-  });
-
-
-},
-
-deleteItem: (req, res) => {
-  let ItemId = req.params.ItemId;
-
-  let deleteUserQuery = 'DELETE FROM Item WHERE ItemId = '+ ItemId;
-
-
-
-  db.query(deleteUserQuery, (err, result) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-    res.redirect('/list_Items');
-  });
-
-
-},
 
 addItemPage: (req, res) =>{
   res.render('add_item.ejs', {
@@ -157,25 +172,40 @@ addItemPage: (req, res) =>{
 addItem: (req, res) => {
 
   if(req.body.ItemName == '' || req.body.Price == '' || req.body.ItemType == '' || req.body.Quantity == '' || req.body.SellerId == ''){
-    res.direct('list_items.ejs');
+    res.direct('/list_Items');
   }
+
+
 
   let message1 ='';
   let ItemName = req.body.ItemName;
-  let Price = req.body.Price;
+  let Price = parseFloat(req.body.Price);
   let ItemType = req.body.ItemType;
-  let Quantity = req.body.Quantity;
+  let Quantity = parseInt(req.body.Quantity);
   let SellerId = req.body.SellerId;
 
+  let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
 
-  let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
-
-  db.query(query, (err,result) => {
-    if(err) {
+  db.query(query2, (err, result)=>{
+    if(err){
       return res.status(500).send(err);
     }
-    res.redirect('/list_Items');
+    if(result.length > 0){
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
+    }else{
+
+      let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
+
+      db.query(query, (err,result) => {
+        if(err) {
+          return res.status(500).send(err);
+        }
+        res.redirect('/list_Items');
+      });
+    }
   });
+
+
 
 
 },
@@ -235,7 +265,7 @@ addBuy: (req, res) => {
 userLogin: (req,res) => {
   if(req.body.loginUser == null || req.body.loginPass == null || req.body.loginUser == '' || req.body.loginPass == '')
   {
-    console.log("err at line 219");
+    console.log("err at line 258");
     res.redirect("/");
   }else{
 
@@ -271,30 +301,49 @@ userReg: (req,res) => {
   }else{
 
 
-    let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
-    console.log(req.body);
-    db.query(q, (err, result) => {
-      if(err)
-      {
-        console.log("Error in UserReg");
-        res.redirect("/");
-      }else{
+    let check = "select * from Customer where CustomerId = '" + req.body.regUser + "' and Pass = 'SHA2(" + req.body.regPass + ", 256)'";
 
-
-        console.log(result);
-        console.log(req.body);
-        user = req.body.regUser;
-        console.log(user);
-        res.redirect("/");
+    db.query(check, (err1, result1)=>{
+      if(err1){
+        return res.status(500).send(err1);
       }
 
+      if(result1.length > 0){
+        res.render('signup.ejs', {
+          title: 'Database Designers Pro Signup!',
+          message: 'User already in Database!'
+        });
+
+      }else{   
+        let q = "insert into Customer(CustomerId, Pass, FirstName, LastName, Address) values ('" + req.body.regUser + "', 'SHA2(" + req.body.regPass + ", 256)', NULL, NULL, NULL);";
+        console.log(req.body);
+        db.query(q, (err, result) => {
+          if(err){
+            console.log("Error in UserReg");
+            res.redirect("/");
+          }else{
+
+
+            console.log(result);
+            console.log(req.body);
+            user = req.body.regUser;
+            console.log(user);
+            res.redirect("/");
+          }
+
+        });
+
+
+      }
     });
+    
   }
 },
 
 signup: (req, res) =>{
  res.render('signup.ejs', {
-  title: "Database Designers Pro Signup!"
+  title: "Database Designers Pro Signup!",
+  message: ''
 });
 
 
@@ -305,11 +354,18 @@ login: (req, res) =>{
   title: "Database Designers Pro login!"
 });
 
- 
+
 },
 
 goPurchase: (req, res) => {
-  let q = "select SUM(Price) as Total from Buys where CustomerId = '" + user + "' and PaymentId is NULL;";
+
+  if(user =="NULL"){
+    res.render('index.ejs',{
+      title: "Database Designers Pro!",
+      message: 'User not logged in!'
+    });
+
+  }else{let q = "select SUM(Price) as Total from Buys where CustomerId = '" + user + "' and PaymentId is NULL;";
   db.query(q, (err, result) =>{
     if(err) {
       return res.status(500).send(er);
@@ -319,7 +375,8 @@ goPurchase: (req, res) => {
       title: 'Make Purchase',
       Total: result[0].Total
     });
-  });
+  });}
+
 }
 
 };
