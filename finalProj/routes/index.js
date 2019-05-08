@@ -66,7 +66,8 @@ module.exports = {
           res.render('transaction.ejs', {
             title: "Shopping Cart",
             Buys: result,
-            Purchase: r
+            Purchase: r,
+            welcomeMessage: "Welcome, " + user,
           });
         });
 
@@ -314,7 +315,8 @@ else {
 
         res.render('list_items.ejs', {title: "List Items",
           mesage:'',
-          Item: r
+          Item: r,
+          welcomeMessage: "Welcome, " + user,
         });
       });
     });
