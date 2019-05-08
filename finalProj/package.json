@@ -19,5 +19,6 @@
     "nodemon": "^1.18.11",
     "path": "^0.12.7",
     "req-flash": "0.0.3"
-  }
+  },
+  "devDependencies": {}
 }

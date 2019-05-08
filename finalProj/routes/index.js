@@ -84,6 +84,7 @@ module.exports = {
      if (err) res.redirect('/');
 
      res.render('list_items.ejs', {title: "List Items",
+      message: '',
       Item: result
     });
 
@@ -180,28 +181,49 @@ addItem: (req, res) => {
   let Price = parseFloat(req.body.Price);
   let ItemType = req.body.ItemType;
   let Quantity = parseInt(req.body.Quantity);
-  let SellerId = req.body.SellerId;
+  let SellerId = parseInt(req.body.SellerId);
 
-  let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
+  let sellCheck = "Select * from Seller where SellerId = " + SellerId ;
+  db.query(sellCheck, (err, res1)=>{
+    console.log(res1);
+    if(err){throw err;}
 
-  db.query(query2, (err, result)=>{
-    if(err){
-      return res.status(500).send(err);
-    }
-    if(result.length > 0){
-      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
+    if(res1.length == 0){
+      
+
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'No seller to be found!'});
+
+
     }else{
 
-      let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
 
-      db.query(query, (err,result) => {
-        if(err) {
+       let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
+
+       db.query(query2, (err, result)=>{
+        if(err){
           return res.status(500).send(err);
         }
-        res.redirect('/list_Items');
+        else if(Quantity < 0){
+          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
+        }else if(result.length > 0){
+          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
+        }else{
+
+          let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
+
+          db.query(query, (err,result) => {
+            if(err) {
+              return res.status(500).send(err);
+            }
+            res.redirect('/list_Items');
+          });
+        }
       });
-    }
-  });
+
+     }
+   });
+
+ 
 
 
 
@@ -219,13 +241,39 @@ addBuy: (req, res) => {
   let price = req.body.ItemPrice;
   let curQuant = parseInt(req.body.curQuant);
 
-  if(quant > curQuant)
+ if(curQuant == 0)
+ {
+   
+
+   let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
+
+          message1 = 'Selected item is out of stock.'
+          res.render('list_Items.ejs',{
+            message: message1,
+            title: "Item Unavailable.",
+            Item: r
+          });
+        });
+
+ }
+
+  else if(quant > curQuant)
   {
-    message1 = 'Desried quantity  exceeds the current stock.';
-    res.render('list_Items.ejs',{
-      message: message1,
-      title: "Value too high."
-    });
+
+
+    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
+
+          message1 = 'Selected item is out of stock.'
+          res.render('list_Items.ejs',{
+            message: message1,
+            title: "Value too high",
+            Item: r
+          });
+        });
   } else {
 
 
@@ -247,6 +295,7 @@ addBuy: (req, res) => {
           if (err) res.redirect('/');
 
           res.render('list_items.ejs', {title: "List Items",
+            mesage:'',
             Item: r
           });
         });
