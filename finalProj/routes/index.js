@@ -474,6 +474,7 @@ makePurchase: (req, res) => {
     if(r1.length > 0) // already in db
     {
       let t = Date.now();
+      t = t % 9,223,372,036,854,775,806;
       let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + r1[0].Num + ", " + req.body.Total + ", '" + user + "');"
       db.query(q3, (e3, r3) => {
         if(e3) {
@@ -501,6 +502,7 @@ makePurchase: (req, res) => {
           return res.status(500).send(e2);
         }
         let t = Date.now();
+        t = t % 9,223,372,036,854,775,806;
         let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + req.body.CCN + ", " + req.body.Total + ", '" + user + "');"
         db.query(q3, (e3, r3) => {
           if(e3) {
