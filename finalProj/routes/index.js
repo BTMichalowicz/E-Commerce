@@ -314,7 +314,7 @@ else {
         if (err) res.redirect('/');
 
         res.render('list_items.ejs', {title: "List Items",
-          mesage:'',
+          message:'',
           Item: r,
           welcomeMessage: "Welcome, " + user,
         });
@@ -516,7 +516,7 @@ makePurchase: (req, res) => {
               return res.status(500).send(e4);
             }
             db.commit();
-            res.render('/');
+            res.redirect("/");
           });
         });
       });
