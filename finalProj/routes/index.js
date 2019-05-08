@@ -189,7 +189,9 @@ addItem: (req, res) => {
     if(err){
       return res.status(500).send(err);
     }
-    if(result.length > 0){
+    else if(Quantity < 0){
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
+    }else if(result.length > 0){
       res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
     }else{
 
