@@ -181,30 +181,49 @@ addItem: (req, res) => {
   let Price = parseFloat(req.body.Price);
   let ItemType = req.body.ItemType;
   let Quantity = parseInt(req.body.Quantity);
-  let SellerId = req.body.SellerId;
+  let SellerId = parseInt(req.body.SellerId);
 
-  let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
+  let sellCheck = "Select * from Seller where SellerId = " + SellerId ;
+  db.query(sellCheck, (err, res1)=>{
+    console.log(res1);
+    if(err){throw err;}
 
-  db.query(query2, (err, result)=>{
-    if(err){
-      return res.status(500).send(err);
-    }
-    else if(Quantity < 0){
-      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
-    }else if(result.length > 0){
-      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
+    if(res1.length == 0){
+      
+
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'No seller to be found!'});
+
+
     }else{
 
-      let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
 
-      db.query(query, (err,result) => {
-        if(err) {
+       let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
+
+       db.query(query2, (err, result)=>{
+        if(err){
           return res.status(500).send(err);
         }
-        res.redirect('/list_Items');
+        else if(Quantity < 0){
+          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
+        }else if(result.length > 0){
+          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
+        }else{
+
+          let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
+
+          db.query(query, (err,result) => {
+            if(err) {
+              return res.status(500).send(err);
+            }
+            res.redirect('/list_Items');
+          });
+        }
       });
-    }
-  });
+
+     }
+   });
+
+ 
 
 
 
