@@ -219,13 +219,39 @@ addBuy: (req, res) => {
   let price = req.body.ItemPrice;
   let curQuant = parseInt(req.body.curQuant);
 
-  if(quant > curQuant)
+ if(curQuant == 0)
+ {
+   
+
+   let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
+
+          message1 = 'Selected item is out of stock.'
+          res.render('list_Items.ejs',{
+            message: message1,
+            title: "Item Unavailable.",
+            Item: r
+          });
+        });
+
+ }
+
+  else if(quant > curQuant)
   {
-    message1 = 'Desried quantity  exceeds the current stock.';
-    res.render('list_Items.ejs',{
-      message: message1,
-      title: "Value too high."
-    });
+
+
+    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+        db.query(ItemQ, (err, r) => {
+          if (err) res.redirect('/');
+
+          message1 = 'Selected item is out of stock.'
+          res.render('list_Items.ejs',{
+            message: message1,
+            title: "Value too high",
+            Item: r
+          });
+        });
   } else {
 
 
