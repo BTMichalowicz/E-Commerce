@@ -383,33 +383,52 @@ makePurchase: (req, res) => {
     console.log('error');
   }
   console.log("makePurchase");
-  let q = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", '" + req.body.type + "', " + "STR_TO_DATE('" + req.body.month + "-" + req.body.year + "', '%m-%y'));";
-  db.query(q, (err, result) => {
-    if(err) {
-      return res.status(500).send(err);
-    }
-    let q2 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (NULL, " + req.body.CCN + ", " + req.body.Total + ", '" + user + "');";
-    db.query(q2, (e, r) =>{
-      if(e){
-        return res.status(500).send(err);
-      }
-      let q3 = "(select P.PaymentId from Payment P where P.CustomerId = '" + user + "') except (select B.PaymentId from Buys B where B.CustomerId = '" + user + "');";
-      db.query(q3, (er, re) => {
-        if(er){
-          return res.status(500).send(err);
-        }
-        console.log(re);
-        let q4 = "update Buys B set B.PaymentId = " + re[0].PaymentId + " where B.PaymentId is NULL and B.CustomerId = '" + user + "';";
-        db.query(a4, (e1, r1) => {
-          if(e1) {
-            return res.status(500).send(err);
-          }
-          // TODO: add address fields so we can update customer and shipping
+  let m = req.body.month + '';
+  if(req.body.month < 10)
+  {
+    m = '0' + m;
+  }
 
+  let q1 = 'select Num from CreditCard where Num = ' + req.body.CCN;
+  db.query(q1, (e1, r1) => {
+    if(e1) {
+      return res.status(500).send(e1);
+    }
+    db.beginTransaction();
+    if(r1.length > 0) // already in db
+    {
+
+    }
+    else { // new insert
+      let q2 = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", '" + req.body.type + "', + str_to_date('" + m + "-" + req.body.year + "', '%m-%Y'));"
+      db.query(q2, (e2, r2) => {
+        if(e2) {
+          db.rollback();
+          return res.status(500).send(e2);
+        }
+        let t = Date.now();
+        let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + req.body.CCN + ", " + req.body.Total + ", '" + user + "');"
+        db.query(q3, (e3, r3) => {
+          if(e3) {
+            db.rollback();
+            console.log('payment: ' + e3);
+            return res.status(500).send(e3);
+          }
+          let q4 = "update Buys B set B.PaymentId = " + t + " where B.PaymentId IS NULL and B.CustomerId = '" + user + "';";
+          db.query(q4, (e4, r4) => {
+            if(e4){
+              db.rollback();
+              console.log('Update: ' + e4);
+              return res.status(500).send(e4);
+            }
+            db.commit();
+            res.render('/');
+          });
         });
       });
-    });
+    }
   });
+
 
 }
 };
