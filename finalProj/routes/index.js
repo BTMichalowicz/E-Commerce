@@ -490,7 +490,7 @@ makePurchase: (req, res) => {
             return res.status(500).send(e4);
           }
           db.commit();
-          res.render('/');
+          res.redirect('/');
         });
       });
     }
