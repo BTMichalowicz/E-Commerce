@@ -2,7 +2,9 @@ const fs = require('fs');
 var ejs = require('ejs')
 var express = require('express');
 var router = express.Router()
-let user = "NULL";
+let user = "GUEST";
+let welcomeMessage = '';
+
 module.exports = {
 
 
@@ -44,7 +46,7 @@ module.exports = {
 
   getBuy: (req, res) => {
 
-    if(user =="NULL"){
+    if(user =="GUEST"){
       res.render('index.ejs',{
         title: "Database Designers Pro!",
         message: 'User not logged in!'
@@ -74,15 +76,14 @@ module.exports = {
 
 
   getHome: (req, res) => {
+
     res.render('index.ejs', {
       title: "Database Designers Pro!",
-      message: ''
+      message: '',
+      welcomeMessage: "Welcome, " + user
     });
 
-
-
   },
-
 
   getItem: (req, res) => {
 
@@ -92,6 +93,7 @@ module.exports = {
 
      res.render('list_items.ejs', {title: "List Items",
       message: '',
+      welcomeMessage: "Welcome, " + user,
       Item: result
     });
 
@@ -104,7 +106,8 @@ module.exports = {
     if (err) res.redirect('/');
 
     res.render('list_sellers.ejs', {title: "List Sellers!",
-      Seller: result
+      Seller: result,
+      welcomeMessage: "Welcome, " + user,
     });
 
   });
@@ -126,7 +129,8 @@ getSeller: (req, res) => {
 addSellerPage: (req, res) =>{
   res.render('add_seller.ejs', {
     title: "Add a Seller!",
-    message: ''
+    message: '',
+    welcomeMessage: "Welcome, " + user,
   });
 },
 
@@ -149,6 +153,7 @@ addSeller: (req, res) => {
       message1 = 'Name already exists in the database or is null';
       res.render('add_seller.ejs',{
         message: message1,
+        welcomeMessage: "Welcome, " + user,
         title: "Add a Seller!"
       });
 
@@ -171,7 +176,8 @@ addSeller: (req, res) => {
 addItemPage: (req, res) =>{
   res.render('add_item.ejs', {
     title: "Add an Item!!!",
-    message: ''
+    message: '',
+    welcomeMessage: "Welcome, " + user
   });
 },
 
@@ -183,6 +189,7 @@ addItem: (req, res) => {
 
 
 
+
   let message1 ='';
   let ItemName = req.body.ItemName;
   let Price = parseFloat(req.body.Price);
@@ -190,23 +197,22 @@ addItem: (req, res) => {
   let Quantity = parseInt(req.body.Quantity);
   let SellerId = parseInt(req.body.SellerId);
 
-  let sellCheck = "Select * from Seller where SellerId = " + SellerId ;
-  db.query(sellCheck, (err, res1)=>{
-    console.log(res1);
-    if(err){throw err;}
+  let SellCheck = "Select * from Seller where SellerId = " + SellerId;
 
-    if(res1.length == 0){
+  db.query(SellCheck, (err, res1)=>{
+    if(err){ return res.status(500).send(err);}
 
-
-      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'No seller to be found!'});
-
-
+    if(res1 <=0){
+      res.render('add_item.ejs', {
+        title:"Add an item!!!",
+        message: 'No Seller for inserted Item',
+        welcomeMessage: "Welcome, " + user
+      });
     }else{
 
+      let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
 
-       let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
-
-       db.query(query2, (err, result)=>{
+      db.query(query2, (err, result)=>{
         if(err){
           return res.status(500).send(err);
         }
@@ -227,8 +233,9 @@ addItem: (req, res) => {
         }
       });
 
-     }
-   });
+
+    }
+  });
 
 
 
@@ -248,70 +255,71 @@ addBuy: (req, res) => {
   let price = req.body.ItemPrice;
   let curQuant = parseInt(req.body.curQuant);
 
+
  if(curQuant == 0)
  {
 
-
    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err, r) => {
-          if (err) res.redirect('/');
+   db.query(ItemQ, (err, r) => {
+    if (err) res.redirect('/');
 
-          message1 = 'Selected item is out of stock.'
-          res.render('list_Items.ejs',{
-            message: message1,
-            title: "Item Unavailable.",
-            Item: r
-          });
-        });
+    message1 = 'Selected item is out of stock.'
+    res.render('list_Items.ejs',{
+      message: message1,
+      title: "Item Unavailable.",
+      Item: r
+    });
+  });
 
  }
 
-  else if(quant > curQuant)
-  {
+ else if(quant > curQuant)
+ {
 
 
-    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err, r) => {
-          if (err) res.redirect('/');
+  let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+  db.query(ItemQ, (err, r) => {
+    if (err) res.redirect('/');
 
-          message1 = 'Selected item is out of stock.'
-          res.render('list_Items.ejs',{
-            message: message1,
-            title: "Value too high",
-            Item: r
-          });
-        });
-  } else {
+    message1 = 'Selected item is out of stock.'
+    res.render('list_Items.ejs',{
+      message: message1,
+      title: "Value too high",
+      Item: r
+    });
+  });
+}
+else {
 
 
 
 
-    let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ("+ "'"+user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
-    let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
-    db.query(query, (err, result) => {
+  let query = "insert into Buys (CustomerId, ItemId, Quantity, Price, PaymentId) values ("+ "'"+user + "', " + id + ", " + quant + ", " + (price * quant) + ", NULL);" ;
+  let q2 = "update Item I set I.Quantity = " + (curQuant - quant) + " where I.ItemId = " + id;
+  db.query(query, (err, result) => {
 
-      if(err){
-        return res.status(500).send(err);
+    if(err){
+      return res.status(500).send(err);
+    }
+    db.query(q2, (er, re) => {
+      if(er) {
+        return res.status(500).send(er);
       }
-      db.query(q2, (er, re) => {
-        if(er) {
-          return res.status(500).send(er);
-        }
-        let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
-        db.query(ItemQ, (err, r) => {
-          if (err) res.redirect('/');
+      let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
+      db.query(ItemQ, (err, r) => {
+        if (err) res.redirect('/');
 
-          res.render('list_items.ejs', {title: "List Items",
-            message:'',
-            Item: r
-          });
+        res.render('list_items.ejs', {title: "List Items",
+          mesage:'',
+          Item: r
         });
       });
     });
+  });
 
 
 
-  }
+}
 
 
 },
@@ -334,7 +342,9 @@ userLogin: (req,res) => {
         if(result.length==0){
           //Bad username or password
           res.render("login.ejs", {
-            title:"BAD CREDS"
+            title:"BAD CREDS",
+            welcomeMessage: "Welcome, " + user,
+            message: 'Login Information Not Found.'
           });
         }else{
           console.log(result);
@@ -366,7 +376,8 @@ userReg: (req,res) => {
       if(result1.length > 0){
         res.render('signup.ejs', {
           title: 'Database Designers Pro Signup!',
-          message: 'User already in Database!'
+          message: 'User already in Database!',
+          welcomeMessage: "Welcome, " + user,
         });
 
       }else{
@@ -381,7 +392,7 @@ userReg: (req,res) => {
 
 
             user = req.body.regUser;
-
+            welcomeMessage= "Welcome, " + user;
             res.redirect("/");
           }
 
@@ -397,7 +408,8 @@ userReg: (req,res) => {
 signup: (req, res) =>{
  res.render('signup.ejs', {
   title: "Database Designers Pro Signup!",
-  message: ''
+  message: '',
+  welcomeMessage: "Welcome, " + user
 });
 
 
@@ -405,7 +417,8 @@ signup: (req, res) =>{
 
 login: (req, res) =>{
  res.render('login.ejs', {
-  title: "Database Designers Pro login!"
+  title: "Database Designers Pro login!",
+  welcomeMessage: "Welcome, " + user
 });
 
 
@@ -413,7 +426,7 @@ login: (req, res) =>{
 
 goPurchase: (req, res) => {
 
-  if(user =="NULL"){
+  if(user =="GUEST"){
     res.render('index.ejs',{
       title: "Database Designers Pro!",
       message: 'User not logged in!'
