@@ -84,6 +84,7 @@ module.exports = {
      if (err) res.redirect('/');
 
      res.render('list_items.ejs', {title: "List Items",
+      message: '',
       Item: result
     });
 
@@ -273,6 +274,7 @@ addBuy: (req, res) => {
           if (err) res.redirect('/');
 
           res.render('list_items.ejs', {title: "List Items",
+            mesage:'',
             Item: r
           });
         });
