@@ -2,7 +2,9 @@ const fs = require('fs');
 var ejs = require('ejs')
 var express = require('express');
 var router = express.Router()
-let user = "NULL";
+let user = "GUEST";
+let welcomeMessage = '';
+
 module.exports = {
 
 
@@ -67,15 +69,14 @@ module.exports = {
 
 
   getHome: (req, res) => {
+
     res.render('index.ejs', {
       title: "Database Designers Pro!",
-      message: ''
-    });
-
-
-
+      message: '',
+      welcomeMessage: "Welcome, " + user
+     });
+  
   },
-
 
   getItem: (req, res) => {
 
@@ -181,49 +182,30 @@ addItem: (req, res) => {
   let Price = parseFloat(req.body.Price);
   let ItemType = req.body.ItemType;
   let Quantity = parseInt(req.body.Quantity);
-  let SellerId = parseInt(req.body.SellerId);
+  let SellerId = req.body.SellerId;
 
-  let sellCheck = "Select * from Seller where SellerId = " + SellerId ;
-  db.query(sellCheck, (err, res1)=>{
-    console.log(res1);
-    if(err){throw err;}
+  let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
 
-    if(res1.length == 0){
-      
-
-      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'No seller to be found!'});
-
-
+  db.query(query2, (err, result)=>{
+    if(err){
+      return res.status(500).send(err);
+    }
+    else if(Quantity < 0){
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
+    }else if(result.length > 0){
+      res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
     }else{
 
+      let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
 
-       let query2 = "SELECT * from Item where ItemName = '" + ItemName + "' AND Price = " + Price + " AND ItemType = '" +ItemType +"' AND SellerId = " + SellerId; //Quantity shouldn't matter in the event name, price, type, and SellerId are all identical
-
-       db.query(query2, (err, result)=>{
-        if(err){
+      db.query(query, (err,result) => {
+        if(err) {
           return res.status(500).send(err);
         }
-        else if(Quantity < 0){
-          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Item quantity cannot be negative.'});
-        }else if(result.length > 0){
-          res.render('add_item.ejs',{title: 'Add an Item!!', message: 'Duplicate Item Added!'});
-        }else{
-
-          let query = "INSERT INTO Item (Price, ItemType,Quantity,ItemName, SellerId) VALUES (" + Price + ",'" + ItemType + "'," + Quantity + ",'" + ItemName + "'," + SellerId + ")";
-
-          db.query(query, (err,result) => {
-            if(err) {
-              return res.status(500).send(err);
-            }
-            res.redirect('/list_Items');
-          });
-        }
+        res.redirect('/list_Items');
       });
-
-     }
-   });
-
- 
+    }
+  });
 
 
 
@@ -327,7 +309,8 @@ userLogin: (req,res) => {
         if(result.length==0){
           //Bad username or password
           res.render("login.ejs", {
-            title:"BAD CREDS"
+            title:"BAD CREDS", 
+            welcomeMessage: "Welcome, " + user
           });
         }else{
           console.log(result);
@@ -398,7 +381,8 @@ signup: (req, res) =>{
 
 login: (req, res) =>{
  res.render('login.ejs', {
-  title: "Database Designers Pro login!"
+  title: "Database Designers Pro login!",
+  welcomeMessage: "Welcome, " + user
 });
 
 
