@@ -2,7 +2,16 @@
 <% if(Total > 0) {%>
   <p class="text-center"> Total: $<%= Total %> </p>
 <form form class="purchase" action="" method="POST" enctype="multipart/form-data">
-  <label value="Purchase">Purchase:</label> <br><br>
+  <h3>Address: </h3><br><br>
+  <label value="Street Address">Street Address: </label>
+  <input type="text" name="addr" value="" maxlength="45" required><br><br>
+  <label value="Town">Town: </label>
+  <input type="text" name="town" value="" maxlength="45" required><br><br>
+  <label value="State">State: </label>
+  <input type="text" name="state" value="" maxlength="2" required><br><br>
+  <label value="Zip">ZIP Code: </label>
+  <input type="text" name="zip" value="" maxlength="5" required><br><br>
+  <h3>Payment Info: </h3><br><br>
   <label value="Credit Card Number">Credit Card Number: </label>
   <input type="text" name="CCN" value="" maxlength="16" required> <br><br>
   <label value="Company">Company: </label><br>

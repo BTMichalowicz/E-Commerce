@@ -1,5 +1,4 @@
 <%include partials/header.ejs %>
-<% let a = false; %>
 <h2>Shopping Cart:</h2>
 <div class="table-wrapper">
     <% if (Buys.length > 0 ) { %>
@@ -18,7 +17,6 @@
 
       <tbody>
           <% Buys.forEach((item, index) => { %>
-            <% if (item.PaymentId == null) {%>
           <tr>
               <th scope="row"><%= item.ItemId %></th>
 
@@ -29,8 +27,7 @@
               <td><%= item.ItemName %></td>
               <td><%= item.SellerId %></td>
           </tr>
-          <%}
-            else { a = true; }}) %>
+          <%} %>
       </tbody>
   </table>
   <% } else { %>
@@ -40,7 +37,7 @@
 <a class="float-left" href="/purchase" title="Purchase" style="font-size: 16px; ">Purchase</a><br><br>
 <h2>Purchased:</h2>
 <div class="table-wrapper">
-    <% if (a) { %>
+    <% if (Purchase.length > 0) { %>
       <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -55,8 +52,7 @@
         </thead>
 
       <tbody>
-          <% Buys.forEach((i, index) => { %>
-            <% if (i.PaymentId != null) {%>
+          <% Purchase.forEach((i, index) => { %>
           <tr>
               <th scope="row"><%= i.ItemId %></th>
 
@@ -67,7 +63,7 @@
               <td><%= i.ItemName %></td>
               <td><%= i.SellerId %></td>
           </tr>
-          <%} }) %>
+          <%} ) %>
       </tbody>
   </table>
   <% } else { %>

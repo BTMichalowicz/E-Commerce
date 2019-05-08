@@ -50,16 +50,23 @@ module.exports = {
         message: 'User not logged in!'
       });
     }else{
-      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId;";
+      let q = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId and B.PaymentId IS NULL;";
       db.query(q, (err, result) => {
         if(err) {
           return res.status(500).send(err);
         }
-
-        res.render('transaction.ejs', {
-          title: "Shopping Cart",
-          Buys: result
+        let q1 = "select B.CustomerId, B.ItemId, B.Quantity, B.Price, I.ItemName, I.ItemType, I.SellerId, B.PaymentId from Buys B, Item I where B.CustomerId = '" + user + "' and B.ItemId = I.ItemId and B.PaymentId IS NOT NULL;";
+        db.query(q1, (e, r) => {
+          if(e){
+            return res.status(500).send(e);
+          }
+          res.render('transaction.ejs', {
+            title: "Shopping Cart",
+            Buys: result,
+            Purchase: r
+          });
         });
+
       });
     }
 
@@ -189,7 +196,7 @@ addItem: (req, res) => {
     if(err){throw err;}
 
     if(res1.length == 0){
-      
+
 
       res.render('add_item.ejs',{title: 'Add an Item!!', message: 'No seller to be found!'});
 
@@ -223,7 +230,7 @@ addItem: (req, res) => {
      }
    });
 
- 
+
 
 
 
@@ -243,7 +250,7 @@ addBuy: (req, res) => {
 
  if(curQuant == 0)
  {
-   
+
 
    let ItemQ = "SELECT * FROM Item ORDER BY ItemID ASC";
         db.query(ItemQ, (err, r) => {
@@ -295,7 +302,7 @@ addBuy: (req, res) => {
           if (err) res.redirect('/');
 
           res.render('list_items.ejs', {title: "List Items",
-            mesage:'',
+            message:'',
             Item: r
           });
         });
@@ -433,7 +440,7 @@ makePurchase: (req, res) => {
   }
   console.log("makePurchase");
   let m = req.body.month + '';
-  if(req.body.month < 10)
+  if(req.body.month.length < 2)
   {
     m = '0' + m;
   }
@@ -446,7 +453,25 @@ makePurchase: (req, res) => {
     db.beginTransaction();
     if(r1.length > 0) // already in db
     {
-
+      let t = Date.now();
+      let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + r1[0].Num + ", " + req.body.Total + ", '" + user + "');"
+      db.query(q3, (e3, r3) => {
+        if(e3) {
+          db.rollback();
+          console.log('payment: ' + e3);
+          return res.status(500).send(e3);
+        }
+        let q4 = "update Buys B set B.PaymentId = " + t + " where B.PaymentId IS NULL and B.CustomerId = '" + user + "';";
+        db.query(q4, (e4, r4) => {
+          if(e4){
+            db.rollback();
+            console.log('Update: ' + e4);
+            return res.status(500).send(e4);
+          }
+          db.commit();
+          res.render('/');
+        });
+      });
     }
     else { // new insert
       let q2 = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", '" + req.body.type + "', + str_to_date('" + m + "-" + req.body.year + "', '%m-%Y'));"
