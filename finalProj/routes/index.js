@@ -46,7 +46,7 @@ module.exports = {
 
   getBuy: (req, res) => {
 
-    if(user =="NULL"){
+    if(user =="GUEST"){
       res.render('index.ejs',{
         title: "Database Designers Pro!",
         message: 'User not logged in!'
@@ -399,7 +399,7 @@ login: (req, res) =>{
 
 goPurchase: (req, res) => {
 
-  if(user =="NULL"){
+  if(user =="GUEST"){
     res.render('index.ejs',{
       title: "Database Designers Pro!",
       message: 'User not logged in!'
