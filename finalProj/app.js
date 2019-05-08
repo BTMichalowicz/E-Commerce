@@ -88,7 +88,7 @@ app.get('/signup', signup);
 app.get('/purchase', goPurchase);
 app.post('/purchase', makePurchase);
 
-//db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes
+db.query('drop database if exists mydb;', (err) => {if(err) {throw err;} console.log("dropping Relational Database");}); //For testing purposes
 var server = app.listen(port, function(err){
 	if(err){
 		throw err;
