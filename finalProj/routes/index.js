@@ -49,6 +49,7 @@ module.exports = {
     if(user =="GUEST"){
       res.render('index.ejs',{
         title: "Database Designers Pro!",
+        welcomeMessage: "Welcome, " + user,
         message: 'User not logged in!'
       });
     }else{
@@ -266,6 +267,7 @@ addBuy: (req, res) => {
     message1 = 'Selected item is out of stock.'
     res.render('list_Items.ejs',{
       message: message1,
+      welcomeMessage: "Welcome, " + user,
       title: "Item Unavailable.",
       Item: r
     });
@@ -285,6 +287,7 @@ addBuy: (req, res) => {
     res.render('list_Items.ejs',{
       message: message1,
       title: "Value too high",
+      welcomeMessage: "Welcome, " + user,
       Item: r
     });
   });
@@ -429,6 +432,7 @@ goPurchase: (req, res) => {
   if(user =="GUEST"){
     res.render('index.ejs',{
       title: "Database Designers Pro!",
+      welcomeMessage: "Welcome, " + user,
       message: 'User not logged in!'
     });
 
@@ -440,6 +444,7 @@ goPurchase: (req, res) => {
 
     res.render('purchase.ejs', {
       title: 'Make Purchase',
+      welcomeMessage: "Welcome, " + user,
       Total: result[0].Total
     });
   });
