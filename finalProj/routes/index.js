@@ -516,7 +516,11 @@ makePurchase: (req, res) => {
               return res.status(500).send(e4);
             }
             db.commit();
+<<<<<<< HEAD
             res.redirect("/");
+=======
+            res.redirect('/');
+>>>>>>> b57a7898c4232a0f68c4ea23600cae0a84adaae7
           });
         });
       });
