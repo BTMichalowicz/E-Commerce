@@ -60,6 +60,7 @@ module.exports = {
 
         res.render('transaction.ejs', {
           title: "Shopping Cart",
+          welcomeMessage: "Welcome, " + user,
           Buys: result
         });
       });
@@ -86,6 +87,7 @@ module.exports = {
 
      res.render('list_items.ejs', {title: "List Items",
       message: '',
+      welcomeMessage: "Welcome, " + user,
       Item: result
     });
 
@@ -98,7 +100,8 @@ module.exports = {
     if (err) res.redirect('/');
 
     res.render('list_sellers.ejs', {title: "List Sellers!",
-      Seller: result
+      Seller: result,
+      welcomeMessage: "Welcome, " + user,
     });
 
   });
@@ -120,7 +123,8 @@ getSeller: (req, res) => {
 addSellerPage: (req, res) =>{
   res.render('add_seller.ejs', {
     title: "Add a Seller!",
-    message: ''
+    message: '',
+    welcomeMessage: "Welcome, " + user,
   });
 },
 
@@ -143,6 +147,7 @@ addSeller: (req, res) => {
       message1 = 'Name already exists in the database or is null';
       res.render('add_seller.ejs',{
         message: message1,
+        welcomeMessage: "Welcome, " + user,
         title: "Add a Seller!"
       });
 
@@ -165,7 +170,8 @@ addSeller: (req, res) => {
 addItemPage: (req, res) =>{
   res.render('add_item.ejs', {
     title: "Add an Item!!!",
-    message: ''
+    message: '',
+    welcomeMessage: "Welcome, " + user
   });
 },
 
@@ -309,8 +315,9 @@ userLogin: (req,res) => {
         if(result.length==0){
           //Bad username or password
           res.render("login.ejs", {
-            title:"BAD CREDS", 
-            welcomeMessage: "Welcome, " + user
+            title:"BAD CREDS",
+            welcomeMessage: "Welcome, " + user,
+            message: 'Login Information Not Found.'
           });
         }else{
           console.log(result);
@@ -342,7 +349,8 @@ userReg: (req,res) => {
       if(result1.length > 0){
         res.render('signup.ejs', {
           title: 'Database Designers Pro Signup!',
-          message: 'User already in Database!'
+          message: 'User already in Database!',
+          welcomeMessage: "Welcome, " + user,
         });
 
       }else{
@@ -357,7 +365,7 @@ userReg: (req,res) => {
 
 
             user = req.body.regUser;
-
+            welcomeMessage= "Welcome, " + user;
             res.redirect("/");
           }
 
@@ -373,7 +381,8 @@ userReg: (req,res) => {
 signup: (req, res) =>{
  res.render('signup.ejs', {
   title: "Database Designers Pro Signup!",
-  message: ''
+  message: '',
+  welcomeMessage: "Welcome, " + user
 });
 
 
