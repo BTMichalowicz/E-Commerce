@@ -443,20 +443,50 @@ goPurchase: (req, res) => {
     if(err) {
       return res.status(500).send(er);
     }
-
-    res.render('purchase.ejs', {
-      title: 'Make Purchase',
-      welcomeMessage: "Welcome, " + user,
-      Total: result[0].Total
+    let q1 = "select C.FirstName, C.LastName A.Address, A.Town, A.State, A.ZIP from Custmer C, Address A where C.CustomerId = '" + user + "' and C.Address = A.AddId;"
+    db.query(q1, (e1, r1) => {
+      if(e1) {
+        return res.status(500).send(e1);
+      }
+      if(r1.length > 0)
+      {
+        res.render('purchase.ejs', {
+          title: 'Make Purchase',
+          welcomeMessage: "Welcome, " + user,
+          Total: result[0].Total,
+          Address: r1[0].Address,
+          Town: r1[0].Town,
+          State: r1[0].State,
+          Zip: r1[0].ZIP,
+          First: r1[0].FirstName,
+          Last: r1[0].LastName
+        });
+      }
+      else {
+        {
+          res.render('purchase.ejs', {
+            title: 'Make Purchase',
+            welcomeMessage: "Welcome, " + user,
+            Total: result[0].Total,
+            Address: "",
+            Town: "",
+            State: "",
+            Zip: "",
+            First: "",
+            Last: ""
+          });
+        }
+      }
     });
+
   });
 } },
 
 
 makePurchase: (req, res) => {
-  if(req.body.CCN == '' || req.body.CCN.length < 16|| req.body.type == null || req.body.type == "" || req.body.month == null || req.body.year == null)
+  if(req.body.CCN == '' || req.body.CCN.length < 16|| req.body.type == null || req.body.type == "" || req.body.month == null || req.body.year == null || req.body.state.length < 2 || req.body.addr == '' || req.body.town == '' || req.body.state == '' || req.body.zip == '' || req.body.first == '' || req.body.last == '')
   {
-    console.log('error');
+    res.direct("purchase.ejs");
   }
   console.log("makePurchase");
   let m = req.body.month + '';
@@ -474,7 +504,7 @@ makePurchase: (req, res) => {
     if(r1.length > 0) // already in db
     {
       let t = Date.now();
-      t = t % 9,223,372,036,854,775,806;
+      t = t % 9223372036854775806;
       let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + r1[0].Num + ", " + req.body.Total + ", '" + user + "');"
       db.query(q3, (e3, r3) => {
         if(e3) {
@@ -489,6 +519,29 @@ makePurchase: (req, res) => {
             console.log('Update: ' + e4);
             return res.status(500).send(e4);
           }
+          let q5 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase()"' and A.ZIP = " + parseInt(req.body.zip) + ";";
+          db.query(q5, (e5, r5) => {
+            if(e5)
+            {
+              db.rollback();
+              console.log('address: ' + e5);
+              return res.status(500).send(e5);
+            }
+            if(r5.length > 0) // already has address in db
+            {
+              let q6 = "update Customer C set C.Address = " + r5[0].AddId + " where C.CustmerId '" + user + "';";
+              db.query(q6, (e6, r6) => {
+                if(e6){
+                  db.rollback();
+                  return res.status(500).send(e6);
+                }
+                let q7 = "insert into Shipment(ShipmentId, )"
+              });
+            }
+            else { // insert addr
+
+            }
+          });
           db.commit();
           res.redirect('/');
         });

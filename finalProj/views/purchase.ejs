@@ -2,15 +2,20 @@
 <% if(Total > 0) {%>
   <p class="text-center"> Total: $<%= Total %> </p>
 <form form class="purchase" action="" method="POST" enctype="multipart/form-data">
+  <h3>Name: </h3><br><br>
+  <label>First name: </label>
+  <input type="text" name="first"  maxlength="45" required value=<% First %>>
+  <label>Last name: </label>
+  <input type="text" name="last"  maxlength="45" required value=<% Last %>>
   <h3>Address: </h3><br><br>
   <label value="Street Address">Street Address: </label>
-  <input type="text" name="addr" value="" maxlength="45" required><br><br>
+  <input type="text" name="addr"  maxlength="45" required value=<% Address %>><br><br>
   <label value="Town">Town: </label>
-  <input type="text" name="town" value="" maxlength="45" required><br><br>
+  <input type="text" name="town"  maxlength="45" required value=<% Town %>><br><br>
   <label value="State">State: </label>
-  <input type="text" name="state" value="" maxlength="2" required><br><br>
+  <input type="text" name="state" maxlength="2" required value=<% State %>><br><br>
   <label value="Zip">ZIP Code: </label>
-  <input type="text" name="zip" value="" maxlength="5" required><br><br>
+  <input type="text" name="zip" maxlength="5" required value=<% Zip %>><br><br>
   <h3>Payment Info: </h3><br><br>
   <label value="Credit Card Number">Credit Card Number: </label>
   <input type="text" name="CCN" value="" maxlength="16" required> <br><br>
@@ -20,7 +25,7 @@
   <input type="radio" name="type" value="Discover" required> Discover <br>
   <input type="radio" name="type" value="Chase" required> Chase <br><br>
   <label value="Expiration Date">Expiration Date:</label>
-  <input type="number" name="month" value="" maxlength="2" min=<%new Date().getMonth() + 1%> max="12" >/<input type="number" name="year" value="" maxlength="4" min=<%=new Date().getFullYear()%> max=<%=new Date().getFullYear() + 20%> > <br><br>
+  <input type="number" name="month" value="" maxlength="2" min="1" max="12" >/<input type="number" name="year" value="" maxlength="4" min="<%=new Date().getFullYear()%>" max="<%=new Date().getFullYear() + 20%>" > <br><br>
   <input type="hidden" name="Total" value=<%= Total %>>
   <input type="submit" name="purchase" value="MakePurchase">
 </form>

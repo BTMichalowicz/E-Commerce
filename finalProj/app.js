@@ -37,7 +37,7 @@ db.query('CREATE TABLE if not exists Seller(SellerId INT AUTO_INCREMENT,  Seller
 
 db.query('CREATE TABLE if not exists Item(	ItemId INT AUTO_INCREMENT,    Price DECIMAL(10,2) DEFAULT 0.00,    ItemType VARCHAR(45) default \'\',    Quantity INT DEFAULT 0,    ItemName VARCHAR(45) default \'Item\',    SellerId INT NOT NULL,    Primary Key(ItemId),    Foreign Key(SellerId) References Seller(SellerId) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Item Table")});
 
-db.query('CREATE TABLE if not exists Address(	AddId int auto_increment,	Address varchar(45) not null,    Town varchar(45) not null,    State char(2) not null,    ZIP int not null,    primary key(AddID) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Address Table")});
+db.query('CREATE TABLE if not exists Address(	AddId int auto_increment, Address varchar(45) ,    Town varchar(45) ,    State char(2) ,    ZIP int ,    primary key(AddId) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Address Table")});
 
 db.query('CREATE TABLE if not exists Customer(	CustomerId varchar(45) not null, Pass varchar(255) not null, FirstName varchar(45),    LastName varchar(45),    Address int,    primary key(CustomerId),     foreign key(Address) references Address(AddId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Customer Table")});
 
