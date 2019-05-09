@@ -2,26 +2,32 @@
 
 <div class="table-wrapper">
   <style>
-  h1 {text-align:center;}
-  h2 {text-align:center;} 
+  h1 {text-align:center; font-style:italic;}
+  h2 {text-align:center; } 
 </style>
+
  <p class="text-center text-danger"><%= message %></p>
-  <h1> Welcome to Database Designers Pro!</h1>
+  <h1> <em>Welcome to Database Designers Pro! </em></h1>
+
   <h2> Please click the button corresponding to what type of action you would like to see! </h2>
 
 </div>
-
-<a class="float-left"href="/login" title="Login" style="font-size: 16px; ">Login</a>
+<div class = "buttons">
 <br>
+ <button onclick= "window.location.href = '/login';">Log In</button>
+<br> 
 <br>
-<a class="float-left" href="/signup" title="Login" style="font-size: 16px; ">Signup</a>
+<button onclick= "window.location.href = '/signup';">Sign Up</button>
 
-
+</div>
 
 <br><br><br>
        <footer class="container">
+         <style>
+           footer{text-align: center;}
+        </style>
         <p class="float-right"><a href="/">Back to top</a></p>
-        <p>© 2019 Database Designers Pro, Inc. <!-- · <a href="#">Privacy</a> · <a href="#">Terms</a> --></p>
+        <p><i>© 2019 Database Designers Pro, Inc. <!-- · <a href="#">Privacy</a> · <a href="#">Terms</a> --></i></p>
       </footer>
 
 
