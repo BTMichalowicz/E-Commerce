@@ -507,7 +507,6 @@ makePurchase: (req, res) => {
     if(r1.length > 0) // already in db
     {
       let t = Date.now();
-      t = t % 9223372036854775806;
       let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + r1[0].Num + ", " + req.body.Total + ", '" + user + "');"
       db.query(q3, (e3, r3) => {
         if(e3) {
@@ -598,7 +597,7 @@ makePurchase: (req, res) => {
           return res.status(500).send(e2);
         }
         let t = Date.now();
-        t = t % 9,223,372,036,854,775,806;
+
         let q3 = "insert into Payment(PaymentId, CreditCard, Amount, CustomerId) values (" + t + ", " + req.body.CCN + ", " + req.body.Total + ", '" + user + "');"
         db.query(q3, (e3, r3) => {
           if(e3) {
@@ -656,7 +655,7 @@ makePurchase: (req, res) => {
                       return res.status(500).send(e9);
                     }
 
-                      let q10 = "update Customer C set C.Address = " + r5[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
+                      let q10 = "update Customer C set C.Address = " + r9[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
                       db.query(q10, (e10, r10) => {
                         if(e10){
                           db.rollback();
