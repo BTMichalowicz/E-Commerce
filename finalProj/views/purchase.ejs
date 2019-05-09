@@ -4,18 +4,18 @@
 <form form class="purchase" action="" method="POST" enctype="multipart/form-data">
   <h3>Name: </h3><br><br>
   <label>First name: </label>
-  <input type="text" name="first"  maxlength="45" required value=<% First %>>
+  <input type="text" name="first"  maxlength="45" value="<%= First %>" required >
   <label>Last name: </label>
-  <input type="text" name="last"  maxlength="45" required value=<% Last %>>
+  <input type="text" name="last"  maxlength="45"  value="<%= Last %>" required>
   <h3>Address: </h3><br><br>
   <label value="Street Address">Street Address: </label>
-  <input type="text" name="addr"  maxlength="45" required value=<% Address %>><br><br>
+  <input type="text" name="addr"  maxlength="45"  value="<%= Address %>" required><br><br>
   <label value="Town">Town: </label>
-  <input type="text" name="town"  maxlength="45" required value=<% Town %>><br><br>
+  <input type="text" name="town"  maxlength="45"  value="<%= Town %>" required><br><br>
   <label value="State">State: </label>
-  <input type="text" name="state" maxlength="2" required value=<% State %>><br><br>
+  <input type="text" name="state" maxlength="2"  value="<%= State %>" required><br><br>
   <label value="Zip">ZIP Code: </label>
-  <input type="text" name="zip" maxlength="5" required value=<% Zip %>><br><br>
+  <input type="text" name="zip" maxlength="5"  value="<%= Zip %>" required><br><br>
   <h3>Payment Info: </h3><br><br>
   <label value="Credit Card Number">Credit Card Number: </label>
   <input type="text" name="CCN" value="" maxlength="16" required> <br><br>

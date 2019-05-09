@@ -443,13 +443,15 @@ goPurchase: (req, res) => {
     if(err) {
       return res.status(500).send(er);
     }
-    let q1 = "select C.FirstName, C.LastName A.Address, A.Town, A.State, A.ZIP from Custmer C, Address A where C.CustomerId = '" + user + "' and C.Address = A.AddId;"
+    let q1 = "select C.FirstName, C.LastName, A.Address, A.Town, A.State, A.ZIP from Customer C, Address A where C.CustomerId = '" + user + "' and C.Address = A.AddId;";
     db.query(q1, (e1, r1) => {
       if(e1) {
         return res.status(500).send(e1);
       }
       if(r1.length > 0)
       {
+        console.log("has Address");
+        console.log(r1);
         res.render('purchase.ejs', {
           title: 'Make Purchase',
           welcomeMessage: "Welcome, " + user,
@@ -464,6 +466,7 @@ goPurchase: (req, res) => {
       }
       else {
         {
+          console.log("NoAddress");
           res.render('purchase.ejs', {
             title: 'Make Purchase',
             welcomeMessage: "Welcome, " + user,
@@ -495,7 +498,7 @@ makePurchase: (req, res) => {
     m = '0' + m;
   }
 
-  let q1 = 'select Num from CreditCard where Num = ' + req.body.CCN;
+  let q1 = 'select Num from CreditCard where Num = ' + req.body.CCN + ';';
   db.query(q1, (e1, r1) => {
     if(e1) {
       return res.status(500).send(e1);
@@ -519,7 +522,7 @@ makePurchase: (req, res) => {
             console.log('Update: ' + e4);
             return res.status(500).send(e4);
           }
-          let q5 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase()"' and A.ZIP = " + parseInt(req.body.zip) + ";";
+          let q5 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase() + "' and A.ZIP = " + parseInt(req.body.zip) + ";";
           db.query(q5, (e5, r5) => {
             if(e5)
             {
@@ -529,23 +532,63 @@ makePurchase: (req, res) => {
             }
             if(r5.length > 0) // already has address in db
             {
-              let q6 = "update Customer C set C.Address = " + r5[0].AddId + " where C.CustmerId '" + user + "';";
+              let q6 = "update Customer C set C.Address = " + r5[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
               db.query(q6, (e6, r6) => {
                 if(e6){
                   db.rollback();
                   return res.status(500).send(e6);
                 }
-                let q7 = "insert into Shipment(ShipmentId, )"
+                let q7 = "insert into Shipment(ShipmentId, ShipmentAddress, ShipmentStatus) values (NULL, " + r5[0].AddId + ", \'PROCESSED\');";
+                db.query(q7, (e7, r7) => {
+                  if(e7){
+                    db.rollback();
+                    return res.status(500).send(e7);
+                  }
+                  db.commit();
+                  res.redirect('/');
+                });
               });
             }
             else { // insert addr
+              let q8 = "insert into Address(AddId, Address, Town, State, ZIP) values (NULL, '" + req.body.addr + "', '" + req.body.town + "', '" + req.body.state.toUpperCase() + "', " + parseInt(req.body.zip) + ");";
+              db.query(q8, (e8, r8) => {
+                if(e8){
+                  db.rollback();
+                  return res.status(500).send(e8);
+                }
+                let q9 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase() + "' and A.ZIP = " + parseInt(req.body.zip) + ";";
+                db.query(q9, (e9, r9) => {
+                  if(e9)
+                  {
+                    db.rollback();
+                    console.log('address: ' + e9);
+                    return res.status(500).send(e9);
+                  }
 
-            }
-          });
-          db.commit();
-          res.redirect('/');
+                    let q10 = "update Customer C set C.Address = " + r5[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
+                    db.query(q10, (e10, r10) => {
+                      if(e10){
+                        db.rollback();
+                        return res.status(500).send(e10);
+                      }
+                      let q11 = "insert into Shipment(ShipmentId, ShipmentAddress, ShipmentStatus) values (NULL, " + r9[0].AddId + ", \'PROCESSED\');";
+                      db.query(q11, (e11, r11) => {
+                        if(e11){
+                          db.rollback();
+                          return res.status(500).send(e11);
+                        }
+                        db.commit();
+                        res.redirect('/');
+                      });
+                    });
+
+              });
+            });
+          }
+
         });
       });
+    });
     }
     else { // new insert
       let q2 = "insert into CreditCard(Num, PaymentType, ExpirationDate) values (" + req.body.CCN + ", '" + req.body.type + "', + str_to_date('" + m + "-" + req.body.year + "', '%m-%Y'));"
@@ -570,9 +613,71 @@ makePurchase: (req, res) => {
               console.log('Update: ' + e4);
               return res.status(500).send(e4);
             }
-            db.commit();
+            let q5 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase() + "' and A.ZIP = " + parseInt(req.body.zip) + ";";
+            db.query(q5, (e5, r5) => {
+              if(e5)
+              {
+                db.rollback();
+                console.log('address: ' + e5);
+                return res.status(500).send(e5);
+              }
+              if(r5.length > 0) // already has address in db
+              {
+                let q6 = "update Customer C set C.Address = " + r5[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
+                db.query(q6, (e6, r6) => {
+                  if(e6){
+                    db.rollback();
+                    return res.status(500).send(e6);
+                  }
+                  let q7 = "insert into Shipment(ShipmentId, ShipmentAddress, ShipmentStatus) values (NULL, " + r5[0].AddId + ", \'PROCESSED\');";
+                  db.query(q7, (e7, r7) => {
+                    if(e7){
+                      db.rollback();
+                      return res.status(500).send(e7);
+                    }
+                    db.commit();
+                    res.redirect('/');
+                  });
+                });
+              }
+              else { // insert addr
+                let q8 = "insert into Address(AddId, Address, Town, State, ZIP) values (NULL, '" + req.body.addr + "', '" + req.body.town + "', '" + req.body.state.toUpperCase() + "', " + parseInt(req.body.zip) + ");";
+                db.query(q8, (e8, r8) => {
+                  if(e8){
+                    db.rollback();
+                    return res.status(500).send(e8);
+                  }
+                  let q9 = "select A.AddId from Address A where A.Address = '" + req.body.addr + "' and A.Town = '" + req.body.town + "' and A.State = '" + req.body.state.toUpperCase() + "' and A.ZIP = " + parseInt(req.body.zip) + ";";
+                  db.query(q9, (e9, r9) => {
+                    if(e9)
+                    {
+                      db.rollback();
+                      console.log('address: ' + e9);
+                      return res.status(500).send(e9);
+                    }
 
-            res.redirect("/");
+                      let q10 = "update Customer C set C.Address = " + r5[0].AddId + ", C.FirstName = '" + req.body.first + "', C.LastName = '" + req.body.last + "' where C.CustomerId = '" + user + "';";
+                      db.query(q10, (e10, r10) => {
+                        if(e10){
+                          db.rollback();
+                          return res.status(500).send(e10);
+                        }
+                        let q11 = "insert into Shipment(ShipmentId, ShipmentAddress, ShipmentStatus) values (NULL, " + r9[0].AddId + ", \'PROCESSED\');";
+                        db.query(q11, (e11, r11) => {
+                          if(e11){
+                            db.rollback();
+                            return res.status(500).send(e11);
+                          }
+                          db.commit();
+                          res.redirect('/');
+                        });
+                      });
+
+                });
+              });
+            }
+
+          });
 
           });
         });
