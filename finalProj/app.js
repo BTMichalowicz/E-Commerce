@@ -41,11 +41,11 @@ db.query('CREATE TABLE if not exists Address(	AddId int auto_increment,	Address 
 
 db.query('CREATE TABLE if not exists Customer(	CustomerId varchar(45) not null, Pass varchar(255) not null, FirstName varchar(45),    LastName varchar(45),    Address int,    primary key(CustomerId),     foreign key(Address) references Address(AddId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Customer Table")});
 
-db.query('CREATE TABLE if not exists Reviews(	CustomerId varchar(45),    ItemId int,    Rating int not null,    Review varchar(256),    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId) );', (err) => {if (err) {throw err;} console.log("Created Reviews Table")});
+//db.query('CREATE TABLE if not exists Reviews(	CustomerId varchar(45),    ItemId int,    Rating int not null,    Review varchar(256),    primary key(CustomerId, ItemId),    foreign key(CustomerId) references Customer(CustomerId),    foreign key(ItemId) references Item(ItemId) );', (err) => {if (err) {throw err;} console.log("Created Reviews Table")});
 
 db.query('CREATE TABLE if not exists Shipment(	ShipmentId int auto_increment,    ShipmentAddress int not null,    ShipmentStatus char(9) not null,    primary key(ShipmentId),    check(ShipmentStatus in (\'ARRIVED\', \'PROCESSED\', \'SHIPPED\')),    foreign key(ShipmentAddress) references Address(AddID) ) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Shipment Table")})
 
-db.query('CREATE TABLE if not exists Employee(	EmployeeId int auto_increment,    EmployeeRole varchar(64),    FirstName varchar(45) not null,    LastName varchar(45) not null,    Joined date not null,    SupervisorId int,    primary key(EmployeeId),    foreign key(SupervisorId) references Employee(EmployeeId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Employee Table")});
+//db.query('CREATE TABLE if not exists Employee(	EmployeeId int auto_increment,    EmployeeRole varchar(64),    FirstName varchar(45) not null,    LastName varchar(45) not null,    Joined date not null,    SupervisorId int,    primary key(EmployeeId),    foreign key(SupervisorId) references Employee(EmployeeId)) AUTO_INCREMENT=1;',(err) => {if(err) {throw err;} console.log( "Created Employee Table")});
 
 db.query('CREATE TABLE if not exists CreditCard(	Num bigint, PaymentType varchar(10) not null,    ExpirationDate date not null,    Primary key(Num),     check(PaymentType in (\'MasterCard\', \'Visa\', \'Discover\', \'Chase\')) );',(err) => {if(err) {throw err;} console.log( "Created CreditCard Table")});
 
